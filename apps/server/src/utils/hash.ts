@@ -1,4 +1,4 @@
-import { scrypt, randomBytes } from 'crypto';
+import { scrypt, randomBytes, createHash } from 'crypto';
 import { promisify } from 'util';
 import { env } from '@dnd/env';
 
@@ -18,4 +18,6 @@ const verifyPassword = async (password: string, storedHash: string) => {
     return key === derivedKey.toString('hex');
 }
 
-export { hashPassword, verifyPassword };
+const hashToken = (t: string) => createHash("sha256").update(t).digest("hex");
+
+export { hashPassword, verifyPassword, hashToken };

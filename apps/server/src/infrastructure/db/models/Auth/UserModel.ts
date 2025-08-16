@@ -1,35 +1,26 @@
-import { Table, Column, DataType } from 'sequelize-typescript'; // Remove HasMany import
-import { IUser } from '@dnd/types';
-import { Entity } from '../Common/Entity.js';
+import { Table, Column, DataType, HasMany } from "sequelize-typescript";
+import { IUser } from "@dnd/types";
+import { Entity } from "../Common/Entity.js";
+import { RefreshTokenModel } from "./RefreshTokenModel.js";
 
 @Table({
-    tableName: 'users',
-    timestamps: true
+    tableName: "users",
+    timestamps: true,
 })
-
 export class UserModel extends Entity implements IUser {
-    @Column({
-        type: DataType.STRING,
-        allowNull: false
-    })
+    @Column({ type: DataType.STRING, allowNull: false })
     declare email: string;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: false
-    })
+    @Column({ type: DataType.STRING, allowNull: false })
     declare name: string;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: false
-    })
+    @Column({ type: DataType.STRING, allowNull: false })
     declare password: string;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: true,
-        defaultValue: null
+    @HasMany(() => RefreshTokenModel, {
+        foreignKey: "userId",
+        onDelete: "CASCADE",
+        hooks: true,
     })
-    declare refreshToken?: string;
+    declare refreshTokens?: RefreshTokenModel[];
 }

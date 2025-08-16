@@ -3,6 +3,7 @@ import { env } from '@dnd/env';
 import { Sequelize } from 'sequelize-typescript';
 import { UserModel } from './models/Auth/UserModel.js';
 import { log } from '../../utils/log.js';
+import { RefreshTokenModel } from './models/Auth/RefreshTokenModel.js';
 
 const { PG_HOST, PG_PORT, PG_USER, PG_PASSWORD, PG_DATABASE } = env;
 
@@ -20,7 +21,7 @@ class DbService {
                 username: PG_USER,
                 password: PG_PASSWORD,
                 database: PG_DATABASE,
-                models: [UserModel],
+                models: [UserModel, RefreshTokenModel],
                 logging: false,
                 define: {
                     timestamps: true

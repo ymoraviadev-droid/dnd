@@ -5,6 +5,7 @@ import { log } from "../../utils/log.js";
 import { badPathHandler, errorHandler } from "./middlewares/errors.mw.js";
 import { morganLogger } from "./middlewares/morganLogger.mw.js";
 import { mainRouter } from "./routes/main.routes.js";
+import cookieParser from "cookie-parser";
 
 export const startServer = async () => {
     const app = express();
@@ -13,6 +14,7 @@ export const startServer = async () => {
     app.use(cors());
     app.use(express.json());
     app.use(morganLogger);
+    app.use(cookieParser());
 
     // routes
     app.use(mainRouter);
