@@ -1,7 +1,12 @@
-import express from 'express';
+import { startServer } from "./infrastructure/http/server.js";
 
-const app = express();
+const main = async () => {
+    try {
+        await startServer();
+    } catch (err) {
+        console.error("❌ Failed to start server", err);
+        process.exit(1);
+    }
+}
 
-app.listen(4000, () => {
-    console.log('Server is running on http://localhost:4000');
-});
+main();

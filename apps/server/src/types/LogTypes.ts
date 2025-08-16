@@ -1,0 +1,1 @@
+export type LogTypes = "error" | "success" | "info" | "warning" | "secondary" | "standard";
