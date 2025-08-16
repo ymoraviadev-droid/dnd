@@ -1,6 +1,5 @@
 import { Table, Column, DataType } from 'sequelize-typescript'; // Remove HasMany import
 import { IUser } from '@dnd/types';
-// Remove Item import
 import { Entity } from '../Common/Entity.js';
 
 @Table({
@@ -8,7 +7,7 @@ import { Entity } from '../Common/Entity.js';
     timestamps: true
 })
 
-export class UserSchema extends Entity implements IUser {
+export class UserModel extends Entity implements IUser {
     @Column({
         type: DataType.STRING,
         allowNull: false

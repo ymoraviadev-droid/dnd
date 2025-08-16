@@ -1,12 +1,14 @@
 {
     "name": "@dnd/zod-schemas",
     "version": "0.1.0",
+    "private": true,
     "type": "module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
+            "types": "./src/index.ts",
+            "import": "./src/index.ts",
             "default": "./dist/index.js"
         }
     },
@@ -14,7 +16,8 @@
         "dist"
     ],
     "scripts": {
-        "build": "tsc -p tsconfig.json"
+        "build": "tsc -p tsconfig.json",
+        "clean": "rimraf dist"
     },
     "dependencies": {
         "zod": "^3.23.8"
@@ -22,6 +25,7 @@
     "devDependencies": {
         "typescript": "^5.9.2",
         "@types/node": "^24.2.0",
-        "@dnd/typescript-config": "workspace:*"
+        "@dnd/typescript-config": "workspace:*",
+        "rimraf": "^6.0.1"
     }
 }

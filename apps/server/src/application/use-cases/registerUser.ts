@@ -1,11 +1,14 @@
 import { RegisterBody } from "@dnd/zod-schemas";
 import { userRepo } from "../../infrastructure/db/repositories/User.repo.js";
+import { hashPassword } from "../../utils/hash.js";
 
-export async function registerUser(userData: RegisterBody) {
+export const registerUser = async (userData: RegisterBody) => {
 
     const existing = await userRepo.findByEmail(userData.email);
     if (existing) throw new Error("User already exists");
 
-    const user = await userRepo.create(userData);
-    return user;
+    const hashedPassword = await hashPassword(userData.password);
+    const user = await userRepo.create({ ...userData, password: hashedPassword });
+    const { password, ...safeUser } = user;
+    return safeUser;
 }

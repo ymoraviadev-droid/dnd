@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { env } from '@dnd/env';
 import { Sequelize } from 'sequelize-typescript';
-import { UserSchema } from './models/Auth/UserSchema.js';
+import { UserModel } from './models/Auth/UserModel.js';
+import { log } from '../../utils/log.js';
 
 const { PG_HOST, PG_PORT, PG_USER, PG_PASSWORD, PG_DATABASE } = env;
 
@@ -10,7 +11,7 @@ class DbService {
 
     private constructor() { }
 
-    public static getInstance(): Sequelize {
+    private static getInstance(): Sequelize {
         if (!DbService.instance) {
             DbService.instance = new Sequelize({
                 dialect: 'postgres',
@@ -19,7 +20,7 @@ class DbService {
                 username: PG_USER,
                 password: PG_PASSWORD,
                 database: PG_DATABASE,
-                models: [UserSchema],
+                models: [UserModel],
                 logging: false,
                 define: {
                     timestamps: true
@@ -28,6 +29,23 @@ class DbService {
         }
         return DbService.instance;
     }
+
+    public static async connect(): Promise<void> {
+        const sequelize = DbService.getInstance();
+        try {
+            await sequelize.authenticate();
+            console.log('✅ Database connection established');
+
+            if (env.NODE_ENV === 'development') {
+                await sequelize.sync({ alter: true });
+                log('DB Initialized Successfully', "info");
+            }
+        } catch (error) {
+            console.error('❌ Database connection failed', error);
+            throw error;
+        }
+    }
 }
 
-export const sequelize = DbService.getInstance();
+export const connectToDb = DbService.connect;
+
