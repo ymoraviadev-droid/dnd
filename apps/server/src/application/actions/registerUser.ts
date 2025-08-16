@@ -8,7 +8,7 @@ export const registerUser = async (userData: RegisterBody) => {
     if (existing) throw new Error("User already exists");
 
     const hashedPassword = await hashPassword(userData.password);
-    const user = await userRepo.create({ ...userData, password: hashedPassword });
-    const { password, ...safeUser } = user;
+    const user = (await userRepo.create({ ...userData, password: hashedPassword }));
+    const { password, createdAt, updatedAt, refreshToken, ...safeUser } = user.dataValues;
     return safeUser;
 }

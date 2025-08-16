@@ -2,14 +2,14 @@ import { Router } from "express";
 import { catchAsync } from "../middlewares/catchAsync.mw.js";
 import { validate } from "../middlewares/validation.mw.js";
 import { LoginDTO, RegisterDTO } from "@dnd/zod-schemas";
-import { registerUser } from "../../../application/use-cases/registerUser.js";
+import { registerUser } from "../../../application/actions/registerUser.js";
 
 const authRouter = Router();
 
 authRouter.post("/", validate("body", RegisterDTO), catchAsync(async (req, res) => {
     const user = req.body;
     const createdUser = await registerUser(user);
-    return res.status(200).json({ ok: true, user: createdUser });
+    return res.status(200).json(createdUser);
 }));
 
 authRouter.post("/login", validate("body", LoginDTO), catchAsync(async (req, res) => {
