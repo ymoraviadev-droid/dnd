@@ -14,5 +14,8 @@
     "node": ">=18"
   },
   "name": "with-react-native-web",
-  "packageManager": "pnpm@10.14.0"
+  "packageManager": "pnpm@10.14.0",
+  "dependencies": {
+    "typescript": "^5.9.2"
+  }
 }
