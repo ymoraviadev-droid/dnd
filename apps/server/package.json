@@ -1,0 +1,24 @@
+{
+    "name": "server",
+    "private": true,
+    "type": "module",
+    "main": "dist/index.js",
+    "scripts": {
+        "dev": "tsx watch src/index.ts",
+        "build": "tsc -p tsconfig.json",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.21.2",
+        "morgan": "^1.10.1",
+        "pg": "^8.16.3",
+        "zod": "^3.25.76",
+        "sequelize": "^6.37.7"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.3",
+        "tsx": "^4.20.4",
+        "typescript": "^5.9.2"
+    }
+}
