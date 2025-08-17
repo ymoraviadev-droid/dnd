@@ -3,6 +3,9 @@
   "private": true,
   "main": "index.js",
   "type": "module",
+  "expo-router": {
+    "appDir": "src/screens"
+  },
   "scripts": {
     "android": "expo run:android",
     "ios": "expo run:ios",
