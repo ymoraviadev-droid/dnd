@@ -35,20 +35,20 @@ export default function CustomDrawerContent(props: any) {
         </View>
       </TouchableOpacity>
 
-      {!user && authOpen && (
+      {authOpen && (
         <View
           style={{
             paddingLeft: 24,
           }}
         >
           <DrawerItem
-            label="Login"
-            onPress={() => router.push("/auth/login")}
+            label={!user ? "Login" : "Profile"}
+            onPress={() => router.push(!user ? "/auth/login" : "/")}
             labelStyle={{ ...styles.label, ...styles.innerLabel }}
           />
           <DrawerItem
-            label="Signup"
-            onPress={() => router.push("/auth/signup")}
+            label={!user ? "Signup" : "Logout"}
+            onPress={() => router.push(!user ? "/auth/signup" : "/")}
             labelStyle={{ ...styles.label, ...styles.innerLabel }}
           />
         </View>

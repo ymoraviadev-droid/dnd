@@ -66,7 +66,6 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
 
         const user = await userRepo.findById(payload.id);
         if (!user) {
-            console.log("🚫 User not found");
             throw new Error("Unauthorized");
         }
 

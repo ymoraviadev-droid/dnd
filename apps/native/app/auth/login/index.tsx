@@ -3,10 +3,11 @@ import Input from "../../../src/components/forms/Input";
 import { LoginBody, LoginSchema } from "@dnd/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { sendApiRequest } from "../../../src/utils/sendApiRequest";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import useAuth from "../../../src/hooks/useAuth";
 
 const LoginScreen = () => {
+  const { login } = useAuth();
+
   const {
     control,
     handleSubmit,
@@ -18,16 +19,6 @@ const LoginScreen = () => {
       password: "",
     },
   });
-
-  const onSubmit = async (data: LoginBody) => {
-    try {
-      const res = await sendApiRequest.post("/auth/login", data);
-      await AsyncStorage.setItem("accessToken", res.data.accessToken);
-      await AsyncStorage.setItem("refreshToken", res.data.refreshToken);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <KeyboardAvoidingView
@@ -85,7 +76,7 @@ const LoginScreen = () => {
 
         <Button
           title={isSubmitting ? "Working..." : "Login"}
-          onPress={handleSubmit(onSubmit)}
+          onPress={handleSubmit(login)}
           disabled={!isValid}
         />
       </View>
