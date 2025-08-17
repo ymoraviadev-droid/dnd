@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-export default function Login() {
+const SignupScreen = () => {
   return (
     <View
       style={{
@@ -9,7 +9,9 @@ export default function Login() {
         alignItems: "center",
       }}
     >
-      <Text style={{ fontSize: 24, color: "white" }}>Login</Text>
+      <Text style={{ fontSize: 24, color: "white" }}>Signup</Text>
     </View>
   );
-}
+};
+
+export default SignupScreen;

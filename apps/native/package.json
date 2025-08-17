@@ -7,10 +7,10 @@
     "appDir": "src/screens"
   },
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "lint": "expo lint",
+    "start": "npx expo start --clear",
+    "android": "npx expo start --android",
+    "ios": "npx expo start --ios",
+    "lint": "npx expo lint",
     "reset-project": "node ./scripts/reset-project.js"
   },
   "dependencies": {

@@ -1,8 +1,6 @@
 import { Text, View } from "react-native";
-import check from "../../hooks/check";
 
-export default function About() {
-  check();
+const AboutScreen = () => {
   return (
     <View
       style={{
@@ -14,4 +12,6 @@ export default function About() {
       <Text style={{ fontSize: 24, color: "white" }}>About</Text>
     </View>
   );
-}
+};
+
+export default AboutScreen;
