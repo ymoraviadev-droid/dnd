@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { catchAsync } from "../middlewares/catchAsync.mw.js";
 import { validate } from "../middlewares/validation.mw.js";
-import { LoginDTO, RegisterDTO } from "@dnd/zod-schemas";
+import { LoginByTokenDTO, LoginDTO, RegisterDTO } from "@dnd/zod-schemas";
 import { registerUser } from "../../../application/actions/registerUser.js";
 import { loginUser } from "../../../application/actions/loginUser.js";
 import { auth } from "../middlewares/auth.mw.js";
@@ -14,15 +14,20 @@ authRouter.post("/", validate("body", RegisterDTO), catchAsync(async (req, res) 
     return res.status(200).json(createdUser);
 }));
 
-authRouter.post("/login", validate("body", LoginDTO), catchAsync(async (req, res) => {
-    const user = await loginUser(req);
-    return res.status(200).json(user);
-}));
-
-authRouter.post("/login/:token", catchAsync(async (req, res) => {
-    const { token } = req.params;
-    return res.status(200).json({ ok: true });
-}));
+authRouter.post(
+    "/login/:token?",
+    (req, res, next) => {
+        const hasToken = typeof req.params.token === "string" && req.params.token.length > 0;
+        const mw = hasToken
+            ? validate("params", LoginByTokenDTO)
+            : validate("body", LoginDTO);
+        return mw(req, res, next);
+    },
+    catchAsync(async (req, res) => {
+        const out = await loginUser(req);
+        res.status(200).json(out);
+    })
+);
 
 authRouter.get("/:id", auth, catchAsync(async (req, res) => {
     res.status(200).json({});
