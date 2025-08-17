@@ -29,12 +29,23 @@ authRouter.get("/:id", auth, catchAsync(async (req, res) => {
 }));
 
 
-authRouter.get("/refresh/:token", catchAsync(async (req, res) => {
+authRouter.get("/refresh/:token", auth, catchAsync(async (req, res) => {
     const { token } = req.params;
     res.status(200).send({ new: "ok" });
 }));
 
-authRouter.get("/logout", catchAsync(async (req, res) => {
+authRouter.get("/logout", auth, catchAsync(async (req, res) => {
+    res.status(200).send("");
+}));
+
+authRouter.delete("/:id", auth, catchAsync(async (req, res) => {
+    res.status(200).send("");
+}));
+
+authRouter.put("/:id", auth, catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const userData = req.body;
+    // Update user logic here
     res.status(200).send("");
 }));
 

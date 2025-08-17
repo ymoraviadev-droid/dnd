@@ -10,9 +10,8 @@ import {
     generateRefreshToken as issueRefresh,
 } from "../../../utils/jwt.js";
 
-const ACCESS_HEADER = "authorization";                // "Bearer <token>"
-const REFRESH_HEADER = "x-refresh-token";            // for native clients
-const REFRESH_COOKIE = "rt";                          // for web (HttpOnly)
+const ACCESS_HEADER = "authorization";      // "Bearer <token>"
+const REFRESH_HEADER = "x-refresh-token";  // native clients only
 
 const getBearer = (req: Request): string | null => {
     const h = req.headers[ACCESS_HEADER];
@@ -23,11 +22,8 @@ const getBearer = (req: Request): string | null => {
 };
 
 const getRefresh = (req: Request): string | null => {
-    // native first (header), fallback to cookie
     const header = req.header(REFRESH_HEADER);
-    if (header && header.trim()) return header.trim();
-    const cookie = (req as any).cookies?.[REFRESH_COOKIE];
-    return cookie ?? null;
+    return header && header.trim() ? header.trim() : null;
 };
 
 export async function auth(req: Request, res: Response, next: NextFunction) {
@@ -39,7 +35,8 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
                 (req as any).userId = payload.id;
                 return next();
             } catch (e: any) {
-                if (e.name !== "TokenExpiredError" && e.name !== "JsonWebTokenError") {
+                const jwtErrors = ["TokenExpiredError", "JsonWebTokenError", "NotBeforeError"];
+                if (!jwtErrors.includes(e?.name)) {
                     throw new Error("Unauthorized");
                 }
             }
@@ -47,13 +44,11 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
 
         const refresh = getRefresh(req);
         if (!refresh) throw new Error("Unauthorized");
-        let payload: { id: number };
 
+        let payload: { id: number };
         try {
-            payload = jwt.verify(refresh, env.REFRESH_SECRET) as unknown as { id: number };
-            if (!payload || typeof payload.id !== "number") {
-                throw new Error("Unauthorized");
-            }
+            payload = jwt.verify(refresh, env.REFRESH_SECRET) as { id: number };
+            if (!payload || typeof payload.id !== "number") throw new Error("Unauthorized");
         } catch {
             throw new Error("Unauthorized");
         }
@@ -87,17 +82,11 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
         res.setHeader("x-access-token", newAccess);
         res.setHeader("x-refresh-token", newRefresh);
 
-        res.cookie(REFRESH_COOKIE, newRefresh, {
-            httpOnly: true,
-            secure: env.NODE_ENV !== "development",
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/",
-        });
-
         (req as any).userId = user.id;
         return next();
     } catch (err) {
-        return res.status(401).json({ error: (err instanceof Error ? err.message : "Unauthorized") });
+        return res
+            .status(401)
+            .json({ error: err instanceof Error ? err.message : "Unauthorized" });
     }
 }

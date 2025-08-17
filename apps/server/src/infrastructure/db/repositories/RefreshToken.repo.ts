@@ -16,9 +16,12 @@ export class RefreshTokenRepo extends BaseRepo<RefreshTokenModel> {
         super(RefreshTokenModel);
     }
 
-    // hash lookup
     findByHash(hash: string) {
         return this.findOne({ tokenHash: hash });
+    }
+
+    findByIp(ip: string) {
+        return this.findOne({ ip });
     }
 
     async rotate(
