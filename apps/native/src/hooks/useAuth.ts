@@ -20,7 +20,7 @@ const useAuth = () => {
             ToastAndroid.show("Login successful", ToastAndroid.SHORT);
             return true;
         } catch (error) {
-            console.error(error);
+            console.log(error);
             ToastAndroid.show("Login failed", ToastAndroid.SHORT);
             return false;
         }
@@ -35,7 +35,7 @@ const useAuth = () => {
             ToastAndroid.show("Logout successful", ToastAndroid.SHORT);
             return true;
         } catch (error) {
-            console.error(error);
+            console.log(error);
             ToastAndroid.show("Logout failed", ToastAndroid.SHORT);
             return false;
         }

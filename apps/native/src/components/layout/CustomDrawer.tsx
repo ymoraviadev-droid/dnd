@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 
 export default function CustomDrawerContent(props: any) {
   const [authOpen, setAuthOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <DrawerContentScrollView {...props}>
@@ -43,12 +43,12 @@ export default function CustomDrawerContent(props: any) {
         >
           <DrawerItem
             label={!user ? "Login" : "Profile"}
-            onPress={() => router.push(!user ? "/auth/login" : "/")}
+            onPress={() => router.push(!user ? "/auth/login" : "/auth/profile")}
             labelStyle={{ ...styles.label, ...styles.innerLabel }}
           />
           <DrawerItem
             label={!user ? "Signup" : "Logout"}
-            onPress={() => router.push(!user ? "/auth/signup" : "/")}
+            onPress={!user ? () => router.push("/auth/signup") : logout}
             labelStyle={{ ...styles.label, ...styles.innerLabel }}
           />
         </View>

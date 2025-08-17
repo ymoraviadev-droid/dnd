@@ -21,6 +21,7 @@ export default function RootLayout() {
           <Drawer.Screen name="about/index" options={{ title: "About" }} />
           <Drawer.Screen name="auth/login/index" options={{ title: "Login" }} />
           <Drawer.Screen name="auth/signup/index" options={{ title: "Signup" }} />
+          <Drawer.Screen name="auth/profile/index" options={{ title: "Profile" }} />
         </Drawer>
       </AuthProvider>
     </ThemeProvider>
