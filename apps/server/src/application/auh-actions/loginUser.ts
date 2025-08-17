@@ -6,7 +6,7 @@ import { refreshTokenRepo } from "../../infrastructure/db/repositories/RefreshTo
 import { RefreshTokenModel } from "../../infrastructure/db/models/Auth/RefreshTokenModel.js";
 import { userRepo } from "../../infrastructure/db/repositories/User.repo.js";
 import { hashToken, verifyPassword } from "../../utils/hash.js";
-import { generateRefreshToken, generateToken } from "../../utils/jwt.js";
+import { generateToken } from "../../utils/jwt.js";
 
 export const loginUser = async (req: Request) => {
     const ua = (req.headers["user-agent"] as string) ?? null;
@@ -16,11 +16,13 @@ export const loginUser = async (req: Request) => {
     const tokenParam = (req.params as any)?.token as string | undefined;
     if (tokenParam && tokenParam.trim()) {
         let payload: any;
+
         try {
             payload = jwt.verify(tokenParam, env.REFRESH_SECRET);
         } catch {
             throw new Error("Unauthorized");
         }
+
         const userId = Number(payload?.id ?? payload?.sub);
         if (!userId) throw new Error("Unauthorized");
 
@@ -30,8 +32,8 @@ export const loginUser = async (req: Request) => {
             throw new Error("Unauthorized");
         }
 
-        const accessToken = generateToken(userId);
-        const refreshToken = generateRefreshToken(userId);
+        const accessToken = generateToken(userId, "access");
+        const refreshToken = generateToken(userId, "refresh");
         const newHash = hashToken(refreshToken);
 
         await existing.update({
@@ -51,6 +53,7 @@ export const loginUser = async (req: Request) => {
         return { user: safe, accessToken, refreshToken };
     }
 
+    // === Mode B: login by credentials ===
     const { email, password } = req.body;
     const user = await userRepo.findByEmail(email);
     if (!user) throw new Error("User not found");
@@ -58,8 +61,8 @@ export const loginUser = async (req: Request) => {
     const ok = await verifyPassword(password, user.password);
     if (!ok) throw new Error("Invalid password");
 
-    const accessToken = generateToken(user.id);
-    const refreshToken = generateRefreshToken(user.id);
+    const accessToken = generateToken(user.id, "access");
+    const refreshToken = generateToken(user.id, "refresh");
     const newHash = hashToken(refreshToken);
 
     const exists = await RefreshTokenModel.findOne({ where: { userId: user.id } });
@@ -72,7 +75,7 @@ export const loginUser = async (req: Request) => {
         ip,
         revokedAt: null,
         replacedByToken: null,
-    } as any;
+    } as Partial<RefreshTokenModel>;
 
     if (exists) {
         await exists.update(rowData);

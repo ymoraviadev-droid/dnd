@@ -2,8 +2,8 @@ import { Router } from "express";
 import { catchAsync } from "../middlewares/catchAsync.mw.js";
 import { validate } from "../middlewares/validation.mw.js";
 import { LoginByTokenDTO, LoginDTO, RegisterDTO } from "@dnd/zod-schemas";
-import { registerUser } from "../../../application/actions/registerUser.js";
-import { loginUser } from "../../../application/actions/loginUser.js";
+import { loginUser } from "../../../application/auh-actions/loginUser.js";
+import { registerUser } from "../../../application/auh-actions/registerUser.js";
 import { auth } from "../middlewares/auth.mw.js";
 
 const authRouter = Router();

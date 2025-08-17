@@ -5,10 +5,7 @@ import { env } from "@dnd/env";
 import { userRepo } from "../../db/repositories/User.repo.js";
 import { refreshTokenRepo } from "../../db/repositories/RefreshToken.repo.js";
 import { hashToken } from "../../../utils/hash.js";
-import {
-    generateToken as issueAccess,
-    generateRefreshToken as issueRefresh,
-} from "../../../utils/jwt.js";
+import { generateToken } from "../../../utils/jwt.js";
 
 const ACCESS_HEADER = "authorization";      // "Bearer <token>"
 const REFRESH_HEADER = "x-refresh-token";  // native clients only
@@ -63,8 +60,8 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
         const user = await userRepo.findById(payload.id);
         if (!user) throw new Error("Unauthorized");
 
-        const newAccess = issueAccess(user.id);
-        const newRefresh = issueRefresh(user.id);
+        const newAccess = generateToken(user.id, "access");
+        const newRefresh = generateToken(user.id, "refresh");
 
         await refreshTokenRepo.rotate({
             oldHash: hashed,
