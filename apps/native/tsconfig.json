@@ -1,12 +1,24 @@
 {
   "extends": "../../packages/typescript-config/tsconfig.base.json",
-  "include": [
-    "src"
-  ],
   "compilerOptions": {
     "noEmit": true,
     "outDir": "dist",
     "declaration": false,
-    "sourceMap": false
-  }
+    "sourceMap": false,
+    "jsx": "react-jsx",
+    "types": [
+      "react",
+      "react-native"
+    ]
+  },
+  "include": [
+    "app",
+    "src",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }
