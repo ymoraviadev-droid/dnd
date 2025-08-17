@@ -25,51 +25,37 @@ export class RefreshTokenRepo extends BaseRepo<RefreshTokenModel> {
     }
 
     async rotate(
-        {
-            oldHash,
-            newRecord,
-        }: { oldHash: string; newRecord: CreateRefreshAttrs },
-        tx?: Transaction
+        { newRecord }: { newRecord: CreateRefreshAttrs },
     ): Promise<RefreshTokenModel> {
         const sequelize = RefreshTokenModel.sequelize!;
-        const created = await sequelize.transaction(
-            { transaction: tx },
-            async (t) => {
-                const prev = await RefreshTokenModel.findOne({
-                    where: { tokenHash: oldHash },
-                    transaction: t,
-                    lock: t.LOCK.UPDATE,
+        console.log("🔄 Starting simple rotation process");
+
+        try {
+            const created = await sequelize.transaction(async (t) => {
+                console.log("🚀 Transaction started");
+
+                console.log("🧹 Deleting all tokens for user:", newRecord.userId);
+                const deleteCount = await RefreshTokenModel.destroy({
+                    where: { userId: newRecord.userId },
+                    transaction: t
                 });
+                console.log("🗑️ Deleted", deleteCount, "tokens");
 
-                if (prev && !prev.revokedAt) {
-                    await prev.update(
-                        {
-                            revokedAt: new Date(),
-                            replacedByToken: newRecord.tokenHash,
-                        } as Partial<RefreshTokenModel>,
-                        { transaction: t }
-                    );
-                }
+                console.log("🆕 Creating new token...");
+                const row = await RefreshTokenModel.create(newRecord as any, {
+                    transaction: t,
+                });
+                console.log("✅ New token created with ID:", row.id);
+                return row;
+            });
 
-                try {
-                    const row = await RefreshTokenModel.create(newRecord as any, {
-                        transaction: t,
-                    });
-                    return row;
-                } catch (e) {
-                    if (e instanceof UniqueConstraintError) {
-                        const existing = await RefreshTokenModel.findOne({
-                            where: { tokenHash: newRecord.tokenHash },
-                            transaction: t,
-                        });
-                        if (existing) return existing;
-                    }
-                    throw e;
-                }
-            }
-        );
+            console.log("✅ Transaction completed successfully");
+            return created;
 
-        return created;
+        } catch (error) {
+            console.log("❌ Transaction failed:", error);
+            throw error;
+        }
     }
 }
 

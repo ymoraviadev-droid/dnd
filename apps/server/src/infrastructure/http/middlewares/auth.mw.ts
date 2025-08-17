@@ -7,7 +7,7 @@ import { refreshTokenRepo } from "../../db/repositories/RefreshToken.repo.js";
 import { hashToken } from "../../../utils/hash.js";
 import { generateToken } from "../../../utils/jwt.js";
 
-const ACCESS_HEADER = "authorization";      // "Bearer <token>"
+const ACCESS_HEADER = "x-access-token";      // "Bearer <token>"
 const REFRESH_HEADER = "x-refresh-token";  // native clients only
 
 const getBearer = (req: Request): string | null => {
@@ -26,6 +26,7 @@ const getRefresh = (req: Request): string | null => {
 export async function auth(req: Request, res: Response, next: NextFunction) {
     try {
         const access = getBearer(req);
+
         if (access) {
             try {
                 const payload = jwt.verify(access, env.JWT_SECRET) as { id: number };
@@ -37,34 +38,42 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
                     throw new Error("Unauthorized");
                 }
             }
+        } else {
         }
 
         const refresh = getRefresh(req);
-        if (!refresh) throw new Error("Unauthorized");
+        if (!refresh) {
+            throw new Error("Unauthorized");
+        }
 
         let payload: { id: number };
         try {
             payload = jwt.verify(refresh, env.REFRESH_SECRET) as { id: number };
-            if (!payload || typeof payload.id !== "number") throw new Error("Unauthorized");
-        } catch {
+            if (!payload || typeof payload.id !== "number") {
+                throw new Error("Unauthorized");
+            }
+        } catch (e: any) {
             throw new Error("Unauthorized");
         }
 
         const hashed = hashToken(refresh);
         const stored = await refreshTokenRepo.findByHash(hashed);
+
         const now = new Date();
         if (!stored || stored.revokedAt || stored.expiresAt <= now) {
             throw new Error("Unauthorized");
         }
 
         const user = await userRepo.findById(payload.id);
-        if (!user) throw new Error("Unauthorized");
+        if (!user) {
+            console.log("🚫 User not found");
+            throw new Error("Unauthorized");
+        }
 
         const newAccess = generateToken(user.id, "access");
         const newRefresh = generateToken(user.id, "refresh");
 
         await refreshTokenRepo.rotate({
-            oldHash: hashed,
             newRecord: {
                 userId: user.id,
                 tokenHash: hashToken(newRefresh),
@@ -76,8 +85,8 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
             },
         });
 
-        res.setHeader("x-access-token", newAccess);
-        res.setHeader("x-refresh-token", newRefresh);
+        res.setHeader(ACCESS_HEADER, newAccess);
+        res.setHeader(REFRESH_HEADER, newRefresh);
 
         (req as any).userId = user.id;
         return next();

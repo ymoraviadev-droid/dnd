@@ -2,7 +2,7 @@ import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 export default function CustomDrawerContent(props: any) {
   const [authOpen, setAuthOpen] = useState(false);

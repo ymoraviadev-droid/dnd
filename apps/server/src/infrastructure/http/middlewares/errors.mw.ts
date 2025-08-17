@@ -8,6 +8,7 @@ export const badPathHandler = (req: Request, res: Response) => {
 
 export const errorHandler = (err: Error, _: Request, res: Response, next: NextFunction) => {
     log(`Error: ${err.message}`, 'error');
+    console.log(err.stack);
     res.status(500).json({ error: err.message });
     next(err);
 }

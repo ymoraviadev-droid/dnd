@@ -1,6 +1,6 @@
 import { Drawer } from "expo-router/drawer";
 import { ThemeProvider, DarkTheme } from "@react-navigation/native";
-import CustomDrawerContent from "../src/components/CustomDrawer";
+import CustomDrawerContent from "../src/components/layout/CustomDrawer";
 
 export default function RootLayout() {
   return (

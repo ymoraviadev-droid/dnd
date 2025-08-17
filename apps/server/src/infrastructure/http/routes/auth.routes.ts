@@ -1,14 +1,14 @@
 import { Router } from "express";
 import { catchAsync } from "../middlewares/catchAsync.mw.js";
 import { validate } from "../middlewares/validation.mw.js";
-import { LoginByTokenDTO, LoginDTO, RegisterDTO } from "@dnd/zod-schemas";
+import { LoginByTokenSchema, LoginSchema, RegisterSchema } from "@dnd/zod-schemas";
 import { loginUser } from "../../../application/auh-actions/loginUser.js";
 import { registerUser } from "../../../application/auh-actions/registerUser.js";
 import { auth } from "../middlewares/auth.mw.js";
 
 const authRouter = Router();
 
-authRouter.post("/", validate("body", RegisterDTO), catchAsync(async (req, res) => {
+authRouter.post("/", validate("body", RegisterSchema), catchAsync(async (req, res) => {
     const user = req.body;
     const createdUser = await registerUser(user);
     return res.status(200).json(createdUser);
@@ -19,8 +19,8 @@ authRouter.post(
     (req, res, next) => {
         const hasToken = typeof req.params.token === "string" && req.params.token.length > 0;
         const mw = hasToken
-            ? validate("params", LoginByTokenDTO)
-            : validate("body", LoginDTO);
+            ? validate("params", LoginByTokenSchema)
+            : validate("body", LoginSchema);
         return mw(req, res, next);
     },
     catchAsync(async (req, res) => {
