@@ -2,13 +2,6 @@
     "open": [
         [
             {
-                "name": "Main",
-                "path": ".",
-                "command": ""
-            }
-        ],
-        [
-            {
                 "name": "Server",
                 "path": "./apps/server",
                 "command": "pnpm run dev"
