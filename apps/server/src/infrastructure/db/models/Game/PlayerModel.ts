@@ -11,7 +11,7 @@ import type {
 } from "@dnd/types";
 
 const RACES: PlayerRace[] = ["human", "elf", "dwarf", "orc", "halfling", "gnome", "half-elf", "half-orc"];
-const CLASSES: PlayerClass[] = ["Fighter", "Mage", "Thief", "Cleric"];
+const CLASSES: PlayerClass[] = ["fighter", "cleric", "mage", "thief"];
 const ALIGNMENTS: PlayerAlignment[] = [
     "lawful-good", "neutral-good", "chaotic-good",
     "lawful-neutral", "true-neutral", "chaotic-neutral",

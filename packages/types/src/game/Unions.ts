@@ -4,8 +4,8 @@ export type PlayerRace =
     | "half-elf" | "half-orc";
 
 export type PlayerClass =
-    | "Fighter" | "Cleric" | "Mage"
-    | "Thief";
+    | "fighter" | "cleric" | "mage"
+    | "thief";
 
 export type PlayerAlignment =
     | "lawful-good" | "neutral-good" | "chaotic-good"

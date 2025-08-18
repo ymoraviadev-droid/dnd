@@ -30,7 +30,7 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
         if (access) {
             try {
                 const payload = jwt.verify(access, env.JWT_SECRET) as { id: number };
-                (req as any).userId = payload.id;
+                req.userId = payload.id;
                 return next();
             } catch (e: any) {
                 const jwtErrors = ["TokenExpiredError", "JsonWebTokenError", "NotBeforeError"];
@@ -78,8 +78,8 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
                 tokenHash: hashToken(newRefresh),
                 issuedAt: now,
                 expiresAt: DateTime.now().plus({ days: 7 }).toJSDate(),
-                userAgent: (req.headers["user-agent"] as string) ?? null,
-                ip: (req.ip as string) ?? null,
+                userAgent: String(req.headers["user-agent"]) ?? null,
+                ip: String(req.ip) ?? null,
                 replacedByToken: null,
             },
         });
@@ -87,7 +87,7 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
         res.setHeader(ACCESS_HEADER, newAccess);
         res.setHeader(REFRESH_HEADER, newRefresh);
 
-        (req as any).userId = user.id;
+        req.userId = user.id;
         return next();
     } catch (err) {
         return res
