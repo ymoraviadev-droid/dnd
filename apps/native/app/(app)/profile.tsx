@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import useAuth from "../../../src/hooks/useAuth";
+import useAuth from "../../src/hooks/useAuth";
 
 const ProfileScreen = () => {
   const { user } = useAuth();

@@ -1,9 +1,9 @@
 import { Button, KeyboardAvoidingView, Platform, Text, View } from "react-native";
-import Input from "../../../src/components/forms/Input";
 import { LoginBody, LoginSchema } from "@dnd/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import useAuth from "../../../src/hooks/useAuth";
+import useAuth from "../../src/hooks/useAuth";
+import Input from "../../src/components/forms/Input";
 
 const LoginScreen = () => {
   const { login } = useAuth();

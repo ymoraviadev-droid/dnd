@@ -1,3 +1,4 @@
+// src/components/layout/CustomDrawer.tsx
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useState } from "react";
@@ -7,18 +8,15 @@ import useAuth from "../../hooks/useAuth";
 export default function CustomDrawerContent(props: any) {
   const [authOpen, setAuthOpen] = useState(false);
   const [gameOpen, setGameOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
 
   return (
     <DrawerContentScrollView {...props}>
-      {user && (
-        <DrawerItem
-          label="Home"
-          onPress={() => router.push("/")}
-          labelStyle={styles.label}
-        />
-      )}
-
+      <DrawerItem
+        label="Home"
+        onPress={() => router.push("/home")}
+        labelStyle={styles.label}
+      />
       <DrawerItem
         label="About"
         onPress={() => router.push("/about")}
@@ -26,64 +24,34 @@ export default function CustomDrawerContent(props: any) {
       />
 
       <TouchableOpacity onPress={() => setAuthOpen((prev) => !prev)}>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-          }}
-        >
-          <Text style={styles.label}>{`Account   ${authOpen ? "▾" : "▸"}`}</Text>
+        <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+          <Text style={styles.label}>{`Account ${authOpen ? "▾" : "▸"}`}</Text>
         </View>
       </TouchableOpacity>
 
       {authOpen && (
-        <View
-          style={{
-            paddingLeft: 24,
-          }}
-        >
+        <View style={{ paddingLeft: 24 }}>
           <DrawerItem
-            label={!user ? "Login" : "Profile"}
-            onPress={() => router.push(!user ? "/auth/login" : "/auth/profile")}
+            label="Profile"
+            onPress={() => router.push("/profile")}
             labelStyle={{ ...styles.label, ...styles.innerLabel }}
           />
           <DrawerItem
-            label={!user ? "Signup" : "Logout"}
-            onPress={!user ? () => router.push("/auth/signup") : logout}
+            label="Logout"
+            onPress={logout}
             labelStyle={{ ...styles.label, ...styles.innerLabel }}
           />
         </View>
       )}
 
-      {user && (
-        <TouchableOpacity onPress={() => setGameOpen((prev) => !prev)}>
-          <View
-            style={{
-              paddingHorizontal: 16,
-              paddingVertical: 8,
-            }}
-          >
-            <Text style={styles.label}>{`Game   ${gameOpen ? "▾" : "▸"}`}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-
-      {gameOpen && (
-        <View
-          style={{
-            paddingLeft: 24,
-          }}
-        >
-          <Text style={styles.label}>{`Game   ${gameOpen ? "▾" : "▸"}`}</Text>
+      <TouchableOpacity onPress={() => setGameOpen((prev) => !prev)}>
+        <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+          <Text style={styles.label}>{`Game ${gameOpen ? "▾" : "▸"}`}</Text>
         </View>
-      )}
+      </TouchableOpacity>
 
       {gameOpen && (
-        <View
-          style={{
-            paddingLeft: 24,
-          }}
-        >
+        <View style={{ paddingLeft: 24 }}>
           <DrawerItem
             label="Create Player"
             onPress={() => router.push("/game/create-player")}

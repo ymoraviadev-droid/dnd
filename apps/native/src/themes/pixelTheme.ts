@@ -16,7 +16,7 @@ export const pixelTheme = {
         accentLight: "#ff8a5e",
 
         // Additional colors
-        success: "#00ff88", // Neon green
+        success: "#1f8354ff", // Neon green
         warning: "#ffdd00", // Electric yellow
         danger: "#ff3366", // Hot pink
 

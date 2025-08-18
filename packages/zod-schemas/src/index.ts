@@ -1,13 +1,17 @@
 export { z } from "zod";
 export type { ZodSchema } from "zod";
 
-export * from "./schemas/auth.schema";
+export {
+    LoginSchema,
+    RegisterSchema,
+    LoginByTokenSchema
+} from "./schemas/auth.schema";
 
 export type {
     LoginBody,
     RegisterBody,
     LoginByTokenBody,
-} from "./schemas/auth.schema.ts";
+} from "./schemas/auth.schema";
 
 export {
     CreatePlayerSchema,

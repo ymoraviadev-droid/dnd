@@ -8,7 +8,7 @@ import { ToastAndroid } from "react-native";
 
 const useAuth = () => {
     const context = useContext(authContext);
-    const { user, setUser } = context!;
+    const { user, setUser, loading } = context!;
 
     const login = async (data?: LoginBody) => {
         try {
@@ -23,7 +23,7 @@ const useAuth = () => {
             await AsyncStorage.setItem("accessToken", res.data.accessToken);
             await AsyncStorage.setItem("refreshToken", res.data.refreshToken);
             setUser(res.data.user);
-            router.push("/");
+            router.push("/home");
             ToastAndroid.show("Login successful", ToastAndroid.SHORT);
             return true;
         } catch (error) {
@@ -48,7 +48,7 @@ const useAuth = () => {
         }
     };
 
-    return { user, login, logout };
+    return { user, login, logout, loading };
 };
 
 export default useAuth;
