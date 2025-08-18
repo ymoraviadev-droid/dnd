@@ -1,27 +1,47 @@
 import { forwardRef } from "react";
-import { StyleSheet, TextInput, TextInputProps } from "react-native";
+import { StyleSheet, Text, TextInput, TextInputProps, View } from "react-native";
 import { pixelTheme } from "../../themes/pixelTheme";
 
-const PixelInput = forwardRef<TextInput, TextInputProps>((props, ref) => {
-  const { style, ...restProps } = props;
+type PixelInputProps = TextInputProps & {
+  label: string;
+};
+
+const PixelInput = forwardRef<TextInput, PixelInputProps>((props, ref) => {
+  const { label, style, ...restProps } = props;
 
   return (
-    <TextInput
-      ref={ref}
-      style={[
-        styles.input,
-        style,
-        props.editable === false && styles.disabledInput, // Add disabled style
-      ]}
-      placeholderTextColor={pixelTheme.colors.gray}
-      {...restProps}
-    />
+    <View style={styles.container}>
+      <Text style={styles.label}>{label.toUpperCase()}</Text>
+      <TextInput
+        ref={ref}
+        style={[
+          styles.input,
+          style,
+          props.editable === false && styles.disabledInput, // Add disabled style
+        ]}
+        placeholderTextColor={pixelTheme.colors.gray}
+        {...restProps}
+      />
+    </View>
   );
 });
 
 PixelInput.displayName = "PixelInput";
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    marginBottom: pixelTheme.spacing.md,
+    zIndex: 1,
+  },
+  label: {
+    fontFamily: pixelTheme.fonts.regular,
+    fontSize: 12,
+    color: pixelTheme.colors.textSecondary,
+    marginBottom: 2,
+    marginTop: pixelTheme.spacing.md,
+    textTransform: "uppercase",
+  },
   input: {
     fontFamily: pixelTheme.fonts.regular,
     fontSize: 12,

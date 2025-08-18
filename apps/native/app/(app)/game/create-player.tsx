@@ -82,6 +82,7 @@ const CreatePlayerScreen = () => {
           name="name"
           render={({ field: { onChange, onBlur, value, ref } }) => (
             <PixelInput
+              label="NAME"
               ref={ref}
               placeholder="NAME"
               autoCapitalize="words"
@@ -215,7 +216,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    marginBottom: pixelTheme.spacing.md,
     height: 50,
     fontSize: 13,
   },
