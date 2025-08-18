@@ -28,7 +28,7 @@ const useAuth = () => {
 
     const logout = async () => {
         try {
-            await sendApiRequest.post("/auth/logout");
+            await sendApiRequest.patch(`/auth/logout/${user?.id}`);
             await AsyncStorage.removeItem("accessToken");
             await AsyncStorage.removeItem("refreshToken");
             setUser(null);
