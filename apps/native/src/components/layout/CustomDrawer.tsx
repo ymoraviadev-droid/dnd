@@ -6,6 +6,7 @@ import useAuth from "../../hooks/useAuth";
 
 export default function CustomDrawerContent(props: any) {
   const [authOpen, setAuthOpen] = useState(false);
+  const [gameOpen, setGameOpen] = useState(false);
   const { user, logout } = useAuth();
 
   return (
@@ -49,6 +50,48 @@ export default function CustomDrawerContent(props: any) {
           <DrawerItem
             label={!user ? "Signup" : "Logout"}
             onPress={!user ? () => router.push("/auth/signup") : logout}
+            labelStyle={{ ...styles.label, ...styles.innerLabel }}
+          />
+        </View>
+      )}
+
+      {user && (
+        <TouchableOpacity onPress={() => setGameOpen((prev) => !prev)}>
+          <View
+            style={{
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+            }}
+          >
+            <Text style={styles.label}>{`Game   ${gameOpen ? "▾" : "▸"}`}</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {gameOpen && (
+        <View
+          style={{
+            paddingLeft: 24,
+          }}
+        >
+          <Text style={styles.label}>{`Game   ${gameOpen ? "▾" : "▸"}`}</Text>
+        </View>
+      )}
+
+      {gameOpen && (
+        <View
+          style={{
+            paddingLeft: 24,
+          }}
+        >
+          <DrawerItem
+            label="Create Player"
+            onPress={() => router.push("/game/create-player")}
+            labelStyle={{ ...styles.label, ...styles.innerLabel }}
+          />
+          <DrawerItem
+            label="Play"
+            onPress={() => router.push("/game/play")}
             labelStyle={{ ...styles.label, ...styles.innerLabel }}
           />
         </View>

@@ -17,8 +17,8 @@ export default function RootLayout() {
   }, [login, user]);
 
   return (
-    <ThemeProvider value={DarkTheme}>
-      <AuthProvider>
+    <AuthProvider>
+      <ThemeProvider value={DarkTheme}>
         <Drawer
           drawerContent={(props: any) => <CustomDrawerContent {...props} />}
           screenOptions={{
@@ -31,11 +31,18 @@ export default function RootLayout() {
         >
           <Drawer.Screen name="index" options={{ title: "Home" }} />
           <Drawer.Screen name="about/index" options={{ title: "About" }} />
+
           <Drawer.Screen name="auth/login/index" options={{ title: "Login" }} />
           <Drawer.Screen name="auth/signup/index" options={{ title: "Signup" }} />
           <Drawer.Screen name="auth/profile/index" options={{ title: "Profile" }} />
+
+          <Drawer.Screen
+            name="game/create-player/index"
+            options={{ title: "Create Player" }}
+          />
+          <Drawer.Screen name="game/play/index" options={{ title: "Play" }} />
         </Drawer>
-      </AuthProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
