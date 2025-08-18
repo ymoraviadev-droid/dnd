@@ -2,8 +2,20 @@ import { Drawer } from "expo-router/drawer";
 import { ThemeProvider, DarkTheme } from "@react-navigation/native";
 import CustomDrawerContent from "../src/components/layout/CustomDrawer";
 import AuthProvider from "../src/store/auth/Auth.provider";
+import useAuth from "../src/hooks/useAuth";
+import { useEffect } from "react";
 
 export default function RootLayout() {
+  const { user, login } = useAuth();
+
+  useEffect(() => {
+    if (user) return;
+    const autoLogin = async () => {
+      await login();
+    };
+    autoLogin();
+  }, [login, user]);
+
   return (
     <ThemeProvider value={DarkTheme}>
       <AuthProvider>

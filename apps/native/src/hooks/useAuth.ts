@@ -10,9 +10,16 @@ const useAuth = () => {
     const context = useContext(authContext);
     const { user, setUser } = context!;
 
-    const login = async (data: LoginBody) => {
+    const login = async (data?: LoginBody) => {
         try {
-            const res = await sendApiRequest.post("/auth/login", data);
+            let res;
+            if (data) {
+                res = await sendApiRequest.post("/auth/login", data);
+            } else {
+                const refreshToken = await AsyncStorage.getItem("refreshToken");
+                if (!refreshToken) return false;
+                res = await sendApiRequest.post(`/auth/login/${refreshToken}`);
+            }
             await AsyncStorage.setItem("accessToken", res.data.accessToken);
             await AsyncStorage.setItem("refreshToken", res.data.refreshToken);
             setUser(res.data.user);

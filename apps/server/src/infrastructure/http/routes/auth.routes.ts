@@ -16,18 +16,19 @@ authRouter.post("/", validate("body", RegisterSchema), catchAsync(async (req, re
     return res.status(200).json(createdUser);
 }));
 
-authRouter.post(
-    "/login/:token?",
-    (req, res, next) => {
-        const hasToken = typeof req.params.token === "string" && req.params.token.length > 0;
-        const mw = hasToken
-            ? validate("params", LoginByTokenSchema)
-            : validate("body", LoginSchema);
-        return mw(req, res, next);
-    },
+authRouter.post("/login",
+    validate("body", LoginSchema),
     catchAsync(async (req, res) => {
-        const out = await loginUser(req);
-        res.status(200).json(out);
+        const result = await loginUser(req);
+        res.status(200).json(result);
+    })
+);
+
+authRouter.post("/login/:token",
+    validate("params", LoginByTokenSchema),
+    catchAsync(async (req, res) => {
+        const result = await loginUser(req);
+        res.status(200).json(result);
     })
 );
 

@@ -6,7 +6,7 @@ export const LoginSchema = z.object({
 }).strict();
 
 export const LoginByTokenSchema = z.object({
-    token: z.string().min(6).max(128),
+    token: z.string().min(6).max(512),
 }).strict();
 
 export const RegisterSchema = z.object({
