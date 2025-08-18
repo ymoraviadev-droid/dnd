@@ -8,15 +8,15 @@ import {
 } from "@dnd/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import useAuth from "../../../src/hooks/useAuth";
 import { useCallback, useEffect } from "react";
 import PixelInput from "../../../src/components/forms/PixelInput";
 import PixelSelect from "../../../src/components/forms/PixelSelect";
 import PixelButton from "../../../src/components/PixelButton";
 import { pixelTheme } from "../../../src/themes/pixelTheme";
+import useGame from "../../../src/hooks/useGame";
 
 const CreatePlayerScreen = () => {
-  const { login } = useAuth();
+  const { createPlayer } = useGame();
 
   const {
     control,
@@ -180,7 +180,7 @@ const CreatePlayerScreen = () => {
 
         <PixelButton
           label={isSubmitting ? "WORKING..." : "CREATE"}
-          onPress={handleSubmit(login)}
+          onPress={handleSubmit(createPlayer)}
           disabled={!isValid || isSubmitting}
           variant="success"
           size="large"

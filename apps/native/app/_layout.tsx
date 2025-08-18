@@ -2,6 +2,7 @@ import { Stack, SplashScreen } from "expo-router";
 import { useEffect } from "react";
 import AuthProvider from "../src/store/auth/Auth.provider";
 import useAuth from "../src/hooks/useAuth";
+import GameProvider from "../src/store/game/Game.provider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,7 +37,9 @@ function RootStack() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootStack />
+      <GameProvider>
+        <RootStack />
+      </GameProvider>
     </AuthProvider>
   );
 }

@@ -4,6 +4,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { UserModel } from './models/Auth/UserModel.js';
 import { log } from '../../utils/log.js';
 import { RefreshTokenModel } from './models/Auth/RefreshTokenModel.js';
+import { PlayerModel } from './models/Game/PlayerModel.js';
 
 const { PG_HOST, PG_PORT, PG_USER, PG_PASSWORD, PG_DATABASE } = env;
 
@@ -21,7 +22,7 @@ class DbService {
                 username: PG_USER,
                 password: PG_PASSWORD,
                 database: PG_DATABASE,
-                models: [UserModel, RefreshTokenModel],
+                models: [UserModel, RefreshTokenModel, PlayerModel],
                 logging: false,
                 define: {
                     timestamps: true
@@ -34,7 +35,7 @@ class DbService {
     public static async connect(): Promise<void> {
         const sequelize = DbService.getInstance();
         try {
-            await sequelize.authenticate();
+            await sequelize.sync();
             console.log('✅ Database connection established');
 
             if (env.NODE_ENV === 'development') {

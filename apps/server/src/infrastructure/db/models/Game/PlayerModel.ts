@@ -18,6 +18,10 @@ const ALIGNMENTS: PlayerAlignment[] = [
     "lawful-evil", "neutral-evil", "chaotic-evil",
 ];
 
+const CONDITIONS: Condition[] = [
+    "poisoned", "stunned", "blinded", "prone", "restrained", "charmed", "fear", "paralyzed"
+];
+
 @Table({
     tableName: "players",
     timestamps: true,
@@ -60,16 +64,6 @@ export class PlayerModel extends Entity implements IPlayer {
     @Column(DataType.INTEGER)
     declare xp: number;
 
-    // === Core Stats (JSONB) ===
-    /**
-     * {
-     *   hp: { current: number, max: number },
-     *   ac: number,
-     *   thac0: number,
-     *   abilities: { str:number,dex:number,con:number,int:number,wis:number,cha:number },
-     *   saves?: { paralyzationPoisonDeath:number, rodStaffWand:number, petrificationPolymorph:number, breathWeapon:number, spell:number }
-     * }
-     */
     @AllowNull(false)
     @Column(DataType.JSONB)
     declare stats: IPlayer["stats"];
@@ -80,9 +74,7 @@ export class PlayerModel extends Entity implements IPlayer {
     declare zone?: Zone;
 
     @Default([])
-    @Column(DataType.ARRAY(DataType.ENUM(
-        "poisoned", "stunned", "blinded", "prone", "restrained", "charmed", "fear", "paralyzed"
-    )))
+    @Column(DataType.ARRAY(DataType.STRING))
     declare conditions?: Condition[];
 
     @Default("alive")
