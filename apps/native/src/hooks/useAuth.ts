@@ -39,6 +39,7 @@ const useAuth = () => {
             await AsyncStorage.removeItem("accessToken");
             await AsyncStorage.removeItem("refreshToken");
             setUser(null);
+            router.push("/login");
             ToastAndroid.show("Logout successful", ToastAndroid.SHORT);
             return true;
         } catch (error) {
