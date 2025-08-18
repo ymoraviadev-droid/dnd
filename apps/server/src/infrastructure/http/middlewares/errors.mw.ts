@@ -11,4 +11,4 @@ export const errorHandler = (err: Error, _: Request, res: Response, next: NextFu
     console.log(err.stack);
     res.status(500).json({ error: err.message });
     next(err);
-}
+};
