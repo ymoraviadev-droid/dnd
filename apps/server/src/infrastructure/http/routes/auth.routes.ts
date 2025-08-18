@@ -5,6 +5,8 @@ import { LoginByTokenSchema, LoginSchema, RegisterSchema } from "@dnd/zod-schema
 import { loginUser } from "../../../application/auh-actions/loginUser.js";
 import { registerUser } from "../../../application/auh-actions/registerUser.js";
 import { auth } from "../middlewares/auth.mw.js";
+import { logoutUser } from "../../../application/auh-actions/logoutUser.js";
+import { getUser } from "../../../application/auh-actions/getUser.js";
 
 const authRouter = Router();
 
@@ -30,27 +32,14 @@ authRouter.post(
 );
 
 authRouter.get("/:id", auth, catchAsync(async (req, res) => {
-    res.status(200).json({});
-}));
-
-
-authRouter.get("/refresh/:token", auth, catchAsync(async (req, res) => {
-    const { token } = req.params;
-    res.status(200).send({ new: "ok" });
-}));
-
-authRouter.get("/logout", auth, catchAsync(async (req, res) => {
-    res.status(200).send("");
-}));
-
-authRouter.delete("/:id", auth, catchAsync(async (req, res) => {
-    res.status(200).send("");
-}));
-
-authRouter.put("/:id", auth, catchAsync(async (req, res) => {
     const { id } = req.params;
-    const userData = req.body;
-    // Update user logic here
+    const user = await getUser(+id);
+    res.status(200).json(user);
+}));
+
+authRouter.patch("/logout/:id", auth, catchAsync(async (req, res) => {
+    const { id } = req.params;
+    await logoutUser(+id);
     res.status(200).send("");
 }));
 

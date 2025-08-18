@@ -1,0 +1,28 @@
+{
+    "open": [
+        [
+            {
+                "name": "Main",
+                "path": ".",
+                "command": ""
+            }
+        ],
+        [
+            {
+                "name": "Server",
+                "path": "./apps/server",
+                "command": "pnpm run dev"
+            }
+        ],
+        [
+            {
+                "name": "Native",
+                "path": "./apps/native"
+            }
+        ]
+    ],
+    "close": [
+        "killall",
+        "closeall"
+    ]
+}

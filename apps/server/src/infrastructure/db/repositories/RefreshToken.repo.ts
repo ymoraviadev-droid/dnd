@@ -20,8 +20,8 @@ export class RefreshTokenRepo extends BaseRepo<RefreshTokenModel> {
         return this.findOne({ tokenHash: hash });
     }
 
-    findByIp(ip: string) {
-        return this.findOne({ ip });
+    findByUserId(userId: number) {
+        return this.findOne({ userId });
     }
 
     async rotate(
