@@ -21,7 +21,14 @@ export default function AppLayout() {
         <Drawer.Screen name="profile" options={{ title: "Profile" }} />
 
         <Drawer.Screen name="game/create-player" options={{ title: "Create Player" }} />
-        <Drawer.Screen name="game/campaigns-lobby" options={{ title: "Campaigns" }} />
+        <Drawer.Screen
+          name="game/(campaigns)/campaigns-lobby"
+          options={{ title: "Campaigns Lobby" }}
+        />
+        <Drawer.Screen
+          name="game/(campaigns)/create-campaign"
+          options={{ title: "Create Campaign" }}
+        />
         <Drawer.Screen name="game/play" options={{ title: "Play" }} />
       </Drawer>
     </ThemeProvider>

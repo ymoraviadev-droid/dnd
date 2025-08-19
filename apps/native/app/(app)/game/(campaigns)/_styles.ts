@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { pixelTheme } from "../../../src/themes/pixelTheme";
+import { pixelTheme } from "../../../../src/themes/pixelTheme";
 
-const homeScreenStyles = StyleSheet.create({
+const campaignsLobbyStyles = StyleSheet.create({
     bg: {
         flex: 1,
         width: "100%",
@@ -24,8 +24,8 @@ const homeScreenStyles = StyleSheet.create({
         paddingTop: 20,
     },
     title: {
-        fontSize: 22,
-        color: pixelTheme.colors.primary,
+        fontSize: 18,
+        color: pixelTheme.colors.accent,
         textAlign: "center",
         letterSpacing: 2,
         fontFamily: pixelTheme.fonts.regular,
@@ -34,21 +34,6 @@ const homeScreenStyles = StyleSheet.create({
         textShadowRadius: 0,
         marginBottom: 12,
     },
-    titleUnderline: {
-        width: 180,
-        height: 4,
-        backgroundColor: pixelTheme.colors.primary,
-        marginBottom: 16,
-    },
-    subtitle: {
-        fontSize: 14,
-        color: pixelTheme.colors.accent,
-        fontFamily: pixelTheme.fonts.regular,
-        letterSpacing: 1,
-        textShadowColor: "#000",
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 0,
-    },
 
     // Centered Picker Section
     pickerContainer: {
@@ -56,7 +41,7 @@ const homeScreenStyles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         width: "100%",
-        paddingTop: 70,
+        paddingTop: 20,
     },
     pickerRow: {
         flexDirection: "row",
@@ -158,4 +143,4 @@ const homeScreenStyles = StyleSheet.create({
     },
 });
 
-export default homeScreenStyles;
+export default campaignsLobbyStyles;

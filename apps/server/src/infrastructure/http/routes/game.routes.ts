@@ -6,23 +6,32 @@ import { CreatePlayerSchema, CreateCampaignSchema } from "@dnd/zod-schemas";
 import { createPlayer } from "../../../application/game-actions/createPlayer.js";
 import { auth } from "../middlewares/auth.mw.js";
 import { createCampaignAndWorld } from "../../../application/game-actions/createCampaign.js";
+import { getPlayerCampaigns } from "../../../application/game-actions/getPlayerCampains.js";
 
 const gameRouter = Router();
 
 gameRouter.post("/", auth, validate("body", CreatePlayerSchema), catchAsync(async (req, res) => {
     const player = req.body;
     const createdPlayer = await createPlayer(player, req.userId!);
-    return res.status(200).json(createdPlayer);
+    res.header("Location", `/game/${createdPlayer.id}`);
+    return res.status(201).json(createdPlayer);
 }));
 
-gameRouter.post("/campaign", auth, validate("body", CreateCampaignSchema), catchAsync(async (req, res) => {
+gameRouter.post("/campaign/:playerId", auth, validate("body", CreateCampaignSchema), catchAsync(async (req, res) => {
     const { name, invitedIds } = req.body;
+    const playerId = Number(req.params.playerId);
     const createdCampaign = await createCampaignAndWorld({
         name,
-        ownerId: req.userId!,
+        ownerId: playerId,
         invitedIds
     });
-    return res.status(200).json(createdCampaign);
+    res.header("Location", `/game/campaigns/${createdCampaign.campaign.id}`);
+    return res.status(201).json(createdCampaign);
+}));
+
+gameRouter.get("/campaigns/:playerId", auth, catchAsync(async (req, res) => {
+    const campaigns = await getPlayerCampaigns(Number(req.params.playerId));
+    return res.status(200).json(campaigns);
 }));
 
 export { gameRouter };

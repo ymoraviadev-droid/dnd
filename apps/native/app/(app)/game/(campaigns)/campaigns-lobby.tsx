@@ -1,27 +1,26 @@
 import { ImageBackground, Text, View, Pressable, SafeAreaView } from "react-native";
 import { router } from "expo-router";
-import useAuth from "../../../src/hooks/useAuth";
+import useAuth from "../../../../src/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts, PressStart2P_400Regular } from "@expo-google-fonts/press-start-2p";
-import PixelButton from "../../../src/components/forms/PixelButton";
-import { pixelTheme } from "../../../src/themes/pixelTheme";
-import styles from "./_styles";
-import useGame from "../../../src/hooks/useGame";
+import PixelButton from "../../../../src/components/forms/PixelButton";
+import { pixelTheme } from "../../../../src/themes/pixelTheme";
+import useGame from "../../../../src/hooks/useGame";
 import { useEffect, useState } from "react";
-import { IPlayer } from "@dnd/types";
+import { ICampaign } from "@dnd/types";
+import styles from "./_styles";
 
-const HomeScreen = () => {
+const CampaignLobbyScreen = () => {
   const { user } = useAuth();
-  const { players, setSelectedPlayer } = useGame();
+  const { campaigns, setSelectedCampaign, getAllPlayerCampaigns } = useGame();
   const [fontsLoaded] = useFonts({ PressStart2P_400Regular });
-  const [playersList, setPlayersList] = useState<IPlayer[] | null>(
-    !players ? [] : Array.isArray(players) ? players : [players]
+  const [campaignList, setCampaignList] = useState<ICampaign[] | null>(
+    campaigns ? (Array.isArray(campaigns) ? campaigns : [campaigns]) : []
   );
+  const handleCampaignChange = (direction: "next" | "prev") => {
+    if (!campaignList || campaignList.length <= 1) return;
 
-  const handlePlayerChange = (direction: "next" | "prev") => {
-    if (!playersList || playersList.length <= 1) return;
-
-    setPlayersList((prev) => {
+    setCampaignList((prev) => {
       const list = [...(prev ?? [])];
 
       if (direction === "prev") {
@@ -41,10 +40,17 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    if (!playersList || playersList.length === 0) return;
+    if (!campaignList || campaignList.length === 0) return;
 
-    setSelectedPlayer(playersList[0]);
-  }, [playersList, setSelectedPlayer, user]);
+    setSelectedCampaign(campaignList[0]);
+  }, [campaignList, setSelectedCampaign]);
+
+  useEffect(() => {
+    (async () => {
+      const fetchedCampaigns = await getAllPlayerCampaigns();
+      setCampaignList(fetchedCampaigns ?? []);
+    })();
+  }, [getAllPlayerCampaigns]);
 
   if (!user) return null;
   if (!fontsLoaded) return null;
@@ -52,24 +58,25 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: pixelTheme.colors.background }}>
       <ImageBackground
-        source={require("../../../assets/images/game/home_screen.png")}
+        source={require("../../../../assets/images/game/campaigns_screen.png")}
         style={styles.bg}
-        resizeMode="cover"
+        resizeMode="contain"
+        imageStyle={{
+          marginTop: 100,
+        }}
       >
         <View pointerEvents="none" style={styles.overlay} />
 
         <View style={styles.container}>
           <View style={styles.titleSection}>
-            <Text style={styles.title}>Welcome {user.name}!</Text>
-            <View style={styles.titleUnderline} />
-            <Text style={styles.subtitle}>Select Your Hero</Text>
+            <Text style={styles.title}>Select a Campaign</Text>
           </View>
 
           <View style={styles.pickerContainer}>
             <View style={styles.pickerRow}>
               <Pressable
-                accessibilityLabel="Previous hero"
-                onPress={() => handlePlayerChange("prev")}
+                accessibilityLabel="Previous Campaign"
+                onPress={() => handleCampaignChange("prev")}
                 style={({ pressed }) => [
                   styles.arrowBtn,
                   pressed && styles.arrowBtnPressed,
@@ -86,10 +93,7 @@ const HomeScreen = () => {
                 <View style={styles.cardBorder}>
                   <View style={styles.playerImageBox}>
                     <Text style={styles.playerImageText}>
-                      {playersList?.[0]?.name ?? ""}
-                    </Text>
-                    <Text style={styles.playerImageText}>
-                      {playersList?.[0]?.level ?? ""}
+                      {campaignList?.[0]?.name ?? ""}
                     </Text>
                     <View style={[styles.pixelCorner, styles.topLeft]} />
                     <View style={[styles.pixelCorner, styles.topRight]} />
@@ -100,8 +104,8 @@ const HomeScreen = () => {
               </View>
 
               <Pressable
-                accessibilityLabel="Next hero"
-                onPress={() => handlePlayerChange("next")}
+                accessibilityLabel="Next Campaign"
+                onPress={() => handleCampaignChange("next")}
                 style={({ pressed }) => [
                   styles.arrowBtn,
                   pressed && styles.arrowBtnPressed,
@@ -125,8 +129,8 @@ const HomeScreen = () => {
                 size="medium"
               />
               <PixelButton
-                label="Create Player"
-                onPress={() => router.push("/game/create-player")}
+                label="Create Campaign"
+                onPress={() => router.push("/game/create-campaign")}
                 variant="secondary"
                 size="medium"
               />
@@ -138,4 +142,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default CampaignLobbyScreen;
