@@ -7,6 +7,7 @@ import { RefreshTokenModel } from "../../infrastructure/db/models/Auth/RefreshTo
 import { userRepo } from "../../infrastructure/db/repositories/User.repo.js";
 import { hashToken, verifyPassword } from "../../utils/hash.js";
 import { generateToken } from "../../utils/jwt.js";
+import { playerRepo } from "../../infrastructure/db/repositories/Player.repo.js";
 
 export const loginUser = async (req: Request) => {
     const ua = (req.headers["user-agent"] as string) ?? null;
@@ -83,6 +84,8 @@ export const loginUser = async (req: Request) => {
         await refreshTokenRepo.create(rowData);
     }
 
+    const players = await playerRepo.findAllByUserId(user.id);
+
     const { password: _pwd, createdAt, updatedAt, ...safe } = user.dataValues;
-    return { user: safe, accessToken, refreshToken };
+    return { user: safe, accessToken, refreshToken, players };
 };

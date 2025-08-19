@@ -6,10 +6,43 @@ import { useFonts, PressStart2P_400Regular } from "@expo-google-fonts/press-star
 import PixelButton from "../../../src/components/PixelButton";
 import { pixelTheme } from "../../../src/themes/pixelTheme";
 import styles from "./_styles";
+import useGame from "../../../src/hooks/useGame";
+import { useEffect, useState } from "react";
 
 const HomeScreen = () => {
-  const [fontsLoaded] = useFonts({ PressStart2P_400Regular });
   const { user } = useAuth();
+  const { players, setSelectedPlayer } = useGame();
+  const [fontsLoaded] = useFonts({ PressStart2P_400Regular });
+  const [playersList, setPlayersList] = useState(players);
+
+  const handlePlayerChange = (direction: "next" | "prev") => {
+    if (playersList.length <= 1) return;
+
+    setPlayersList((prev) => {
+      const list = [...prev];
+
+      if (direction === "prev") {
+        const popped = list.pop();
+        if (popped) {
+          list.unshift(popped);
+        }
+      }
+      if (direction === "next") {
+        const popped = list.shift();
+        if (popped) {
+          list.push(popped);
+        }
+      }
+      return list;
+    });
+  };
+
+  useEffect(() => {
+    if (playersList.length === 0) return;
+
+    setSelectedPlayer(playersList[0]);
+  }, [playersList, setSelectedPlayer]);
+
   if (!user) return null;
   if (!fontsLoaded) return null;
 
@@ -33,7 +66,7 @@ const HomeScreen = () => {
             <View style={styles.pickerRow}>
               <Pressable
                 accessibilityLabel="Previous hero"
-                onPress={() => {}}
+                onPress={() => handlePlayerChange("prev")}
                 style={({ pressed }) => [
                   styles.arrowBtn,
                   pressed && styles.arrowBtnPressed,
@@ -49,7 +82,8 @@ const HomeScreen = () => {
               <View style={styles.card}>
                 <View style={styles.cardBorder}>
                   <View style={styles.playerImageBox}>
-                    <Text style={styles.playerImageText}>HERO</Text>
+                    <Text style={styles.playerImageText}>{playersList[0]?.name}</Text>
+                    <Text style={styles.playerImageText}>{playersList[0]?.level}</Text>
                     <View style={[styles.pixelCorner, styles.topLeft]} />
                     <View style={[styles.pixelCorner, styles.topRight]} />
                     <View style={[styles.pixelCorner, styles.bottomLeft]} />
@@ -60,7 +94,7 @@ const HomeScreen = () => {
 
               <Pressable
                 accessibilityLabel="Next hero"
-                onPress={() => {}}
+                onPress={() => handlePlayerChange("next")}
                 style={({ pressed }) => [
                   styles.arrowBtn,
                   pressed && styles.arrowBtnPressed,
