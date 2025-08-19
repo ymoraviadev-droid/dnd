@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import authContext from "./auth.context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { sendApiRequest } from "../../utils/sendApiRequest";
-import { ToastAndroid } from "react-native";
+import { PixelToast } from "../../components/PixelToast";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
@@ -20,11 +20,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
           await AsyncStorage.setItem("refreshToken", res.data.refreshToken);
           setUser(res.data.user);
           setPlayers(res.data.players);
-          ToastAndroid.show(`Welcome back, ${res.data.user.name}!`, ToastAndroid.SHORT);
+          PixelToast.success(`Welcome back, ${res.data.user.name}!`);
         }
       } catch (error) {
         console.log("Auto-login failed:", error);
-        // Clear invalid tokens on auto-login failure
         await AsyncStorage.removeItem("accessToken");
         await AsyncStorage.removeItem("refreshToken");
       } finally {

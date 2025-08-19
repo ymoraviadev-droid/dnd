@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import AuthProvider from "../src/store/auth/Auth.provider";
 import useAuth from "../src/hooks/useAuth";
 import GameProvider from "../src/store/game/Game.provider";
+import PixelToastContainer from "../src/components/PixelToast";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,6 +40,7 @@ export default function RootLayout() {
     <AuthProvider>
       <GameProvider>
         <RootStack />
+        <PixelToastContainer />
       </GameProvider>
     </AuthProvider>
   );

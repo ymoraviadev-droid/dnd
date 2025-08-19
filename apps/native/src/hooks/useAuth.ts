@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginBody } from "@dnd/zod-schemas";
 import { sendApiRequest } from "../utils/sendApiRequest";
 import { router } from "expo-router";
-import { ToastAndroid } from "react-native";
+import { PixelToast } from "../components/PixelToast";
 
 const useAuth = () => {
     const context = useContext(authContext);
@@ -18,11 +18,11 @@ const useAuth = () => {
             setUser(res.data.user);
             setPlayers(res.data.players);
             router.push("/home");
-            ToastAndroid.show("Login successful", ToastAndroid.SHORT);
+            PixelToast.success("Login successful");
             return true;
         } catch (error) {
             console.log(error);
-            ToastAndroid.show("Login failed", ToastAndroid.SHORT);
+            PixelToast.error("Login failed");
             return false;
         }
     };
@@ -35,11 +35,11 @@ const useAuth = () => {
             setUser(null);
             setPlayers([]);
             router.push("/login");
-            ToastAndroid.show("Logout successful", ToastAndroid.SHORT);
+            PixelToast.success("Logout successful");
             return true;
         } catch (error) {
             console.log(error);
-            ToastAndroid.show("Logout failed", ToastAndroid.SHORT);
+            PixelToast.error("Logout failed");
             return false;
         }
     };

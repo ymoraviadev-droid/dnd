@@ -42,7 +42,7 @@ const PixelToast: {
   info: (message, duration) => PixelToast.show(message, "INFO", duration),
 };
 
-const PixelToastComponent = () => {
+const PixelToastContainer = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [type, setType] = useState(TOAST_TYPES.DEFAULT);
@@ -65,24 +65,20 @@ const PixelToastComponent = () => {
 
   const show: ShowFn = useCallback(
     (newMessage, newType = TOAST_TYPES.DEFAULT, duration = DURATION.SHORT) => {
-      // Clear any existing timeout
       if (hideTimeoutRef.current) {
         clearTimeout(hideTimeoutRef.current);
       }
 
-      // Update state
       setMessage(newMessage);
       setType(newType);
       setIsVisible(true);
 
-      // Animate in
       Animated.timing(animatedValue, {
         toValue: 1,
         duration: 300,
         useNativeDriver: true,
       }).start();
 
-      // Auto hide after duration
       hideTimeoutRef.current = setTimeout(() => {
         hide();
       }, duration);
@@ -90,7 +86,6 @@ const PixelToastComponent = () => {
     [animatedValue, hide]
   );
 
-  // Set up the global reference
   useEffect(() => {
     if (!toastRef) {
       toastRef = { current: null };
@@ -237,4 +232,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PixelToastComponent;
+export { PixelToast };
+export default PixelToastContainer;
