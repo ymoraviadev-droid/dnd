@@ -11,6 +11,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [players, setPlayers] = useState<IPlayer[]>([]);
 
   useEffect(() => {
+    if (user) return;
+
     const checkAuth = async () => {
       try {
         const refreshToken = await AsyncStorage.getItem("refreshToken");
@@ -30,7 +32,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     checkAuth();
-  }, []);
+  }, [user]);
 
   return (
     <authContext.Provider

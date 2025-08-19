@@ -27,3 +27,8 @@ export type LifeStatus =
 export type EncumbranceTiers =
     | "unencumbered" | "light" | "medium"
     | "heavy";
+
+export type Biome =
+    | "forest" | "plains" | "mountain"
+    | "desert" | "swamp" | "coast"
+    | "lake" | "river" | "city";

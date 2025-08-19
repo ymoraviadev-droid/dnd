@@ -5,6 +5,8 @@ import { UserModel } from './models/Auth/UserModel.js';
 import { log } from '../../utils/log.js';
 import { RefreshTokenModel } from './models/Auth/RefreshTokenModel.js';
 import { PlayerModel } from './models/Game/PlayerModel.js';
+import { CampaignModel } from './models/Game/CampaignModel.js';
+import { WorldModel } from './models/Game/WorldModel.js';
 
 const { PG_HOST, PG_PORT, PG_USER, PG_PASSWORD, PG_DATABASE } = env;
 
@@ -13,7 +15,7 @@ class DbService {
 
     private constructor() { }
 
-    private static getInstance(): Sequelize {
+    public static getInstance(): Sequelize {
         if (!DbService.instance) {
             DbService.instance = new Sequelize({
                 dialect: 'postgres',
@@ -22,7 +24,7 @@ class DbService {
                 username: PG_USER,
                 password: PG_PASSWORD,
                 database: PG_DATABASE,
-                models: [UserModel, RefreshTokenModel, PlayerModel],
+                models: [UserModel, RefreshTokenModel, PlayerModel, CampaignModel, WorldModel],
                 logging: false,
                 define: {
                     timestamps: true
@@ -35,7 +37,7 @@ class DbService {
     public static async connect(): Promise<void> {
         const sequelize = DbService.getInstance();
         try {
-            await sequelize.sync();
+            await sequelize.authenticate();
             console.log('✅ Database connection established');
 
             if (env.NODE_ENV === 'development') {
@@ -49,5 +51,6 @@ class DbService {
     }
 }
 
+export const sequelize = DbService.getInstance();
 export const connectToDb = DbService.connect;
 
