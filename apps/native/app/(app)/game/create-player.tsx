@@ -11,7 +11,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect } from "react";
 import PixelInput from "../../../src/components/forms/PixelInput";
 import PixelSelect from "../../../src/components/forms/PixelSelect";
-import PixelButton from "../../../src/components/PixelButton";
+import PixelButton from "../../../src/components/forms/PixelButton";
 import { pixelTheme } from "../../../src/themes/pixelTheme";
 import useGame from "../../../src/hooks/useGame";
 

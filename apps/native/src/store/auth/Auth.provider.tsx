@@ -11,8 +11,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [players, setPlayers] = useState<IPlayer[]>([]);
 
   useEffect(() => {
-    if (user) return;
-
     const checkAuth = async () => {
       try {
         const refreshToken = await AsyncStorage.getItem("refreshToken");
@@ -26,13 +24,16 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.log("Auto-login failed:", error);
+        // Clear invalid tokens on auto-login failure
+        await AsyncStorage.removeItem("accessToken");
+        await AsyncStorage.removeItem("refreshToken");
       } finally {
         setLoading(false);
       }
     };
 
     checkAuth();
-  }, [user]);
+  }, []); // Remove user dependency - only run once on mount
 
   return (
     <authContext.Provider

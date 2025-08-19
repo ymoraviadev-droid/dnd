@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { pixelTheme } from "../themes/pixelTheme";
+import { pixelTheme } from "../../themes/pixelTheme";
 
 const PixelButton = ({
   label,

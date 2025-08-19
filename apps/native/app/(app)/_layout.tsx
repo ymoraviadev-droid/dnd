@@ -18,7 +18,10 @@ export default function AppLayout() {
       >
         <Drawer.Screen name="(home)/home" options={{ title: "Home" }} />
         <Drawer.Screen name="about" options={{ title: "About" }} />
+        <Drawer.Screen name="profile" options={{ title: "Profile" }} />
+
         <Drawer.Screen name="game/create-player" options={{ title: "Create Player" }} />
+        <Drawer.Screen name="game/campaigns-lobby" options={{ title: "Campaigns" }} />
         <Drawer.Screen name="game/play" options={{ title: "Play" }} />
       </Drawer>
     </ThemeProvider>

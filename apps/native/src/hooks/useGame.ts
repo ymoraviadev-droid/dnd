@@ -6,11 +6,9 @@ import { IPlayer } from "@dnd/types";
 import { ToastAndroid } from "react-native";
 
 const useGame = () => {
-    const { user, players, setPlayers } = useAuth();
+    const { players, setPlayers } = useAuth();
     const context = useContext(gameContext);
     const { selectedPlayer, setSelectedPlayer } = context!;
-    console.log(user);
-
 
     const createPlayer = async (player: IPlayer) => {
         try {

@@ -50,8 +50,11 @@ export const loginUser = async (req: Request) => {
         const user = await userRepo.findById(userId);
         if (!user) throw new Error("Unauthorized");
 
+        // ADD THIS: Fetch players for auto-login too
+        const players = await playerRepo.findAllByUserId(userId);
+
         const { password: _pwd, createdAt, updatedAt, ...safe } = user.dataValues;
-        return { user: safe, accessToken, refreshToken };
+        return { user: safe, accessToken, refreshToken, players }; // Include players
     }
 
     // === Mode B: login by credentials ===

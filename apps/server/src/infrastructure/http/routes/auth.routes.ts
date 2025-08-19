@@ -16,21 +16,15 @@ authRouter.post("/", validate("body", RegisterSchema), catchAsync(async (req, re
     return res.status(200).json(createdUser);
 }));
 
-authRouter.post("/login",
-    validate("body", LoginSchema),
-    catchAsync(async (req, res) => {
-        const result = await loginUser(req);
-        res.status(200).json(result);
-    })
-);
+authRouter.post("/login", validate("body", LoginSchema), catchAsync(async (req, res) => {
+    const result = await loginUser(req);
+    res.status(200).json(result);
+}));
 
-authRouter.post("/login/:token",
-    validate("params", LoginByTokenSchema),
-    catchAsync(async (req, res) => {
-        const result = await loginUser(req);
-        res.status(200).json(result);
-    })
-);
+authRouter.post("/login/:token", validate("params", LoginByTokenSchema), catchAsync(async (req, res) => {
+    const result = await loginUser(req);
+    res.status(200).json(result);
+}));
 
 authRouter.get("/:id", auth, catchAsync(async (req, res) => {
     const { id } = req.params;

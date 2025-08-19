@@ -3,23 +3,28 @@ import { router } from "expo-router";
 import useAuth from "../../../src/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts, PressStart2P_400Regular } from "@expo-google-fonts/press-start-2p";
-import PixelButton from "../../../src/components/PixelButton";
+import PixelButton from "../../../src/components/forms/PixelButton";
 import { pixelTheme } from "../../../src/themes/pixelTheme";
 import styles from "./_styles";
 import useGame from "../../../src/hooks/useGame";
 import { useEffect, useState } from "react";
+import { IPlayer } from "@dnd/types";
 
 const HomeScreen = () => {
   const { user } = useAuth();
   const { players, setSelectedPlayer } = useGame();
   const [fontsLoaded] = useFonts({ PressStart2P_400Regular });
-  const [playersList, setPlayersList] = useState(players);
+  const [playersList, setPlayersList] = useState<IPlayer[] | null>(
+    !players ? [] : Array.isArray(players) ? players : [players]
+  );
+
+  console.log(players);
 
   const handlePlayerChange = (direction: "next" | "prev") => {
-    if (playersList.length <= 1) return;
+    if (!playersList || playersList.length <= 1) return;
 
     setPlayersList((prev) => {
-      const list = [...prev];
+      const list = [...(prev ?? [])];
 
       if (direction === "prev") {
         const popped = list.pop();
@@ -38,10 +43,10 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    if (playersList.length === 0) return;
+    if (!playersList || playersList.length === 0) return;
 
     setSelectedPlayer(playersList[0]);
-  }, [playersList, setSelectedPlayer]);
+  }, [playersList, setSelectedPlayer, user]);
 
   if (!user) return null;
   if (!fontsLoaded) return null;
@@ -82,8 +87,12 @@ const HomeScreen = () => {
               <View style={styles.card}>
                 <View style={styles.cardBorder}>
                   <View style={styles.playerImageBox}>
-                    <Text style={styles.playerImageText}>{playersList[0]?.name}</Text>
-                    <Text style={styles.playerImageText}>{playersList[0]?.level}</Text>
+                    <Text style={styles.playerImageText}>
+                      {playersList?.[0]?.name ?? ""}
+                    </Text>
+                    <Text style={styles.playerImageText}>
+                      {playersList?.[0]?.level ?? ""}
+                    </Text>
                     <View style={[styles.pixelCorner, styles.topLeft]} />
                     <View style={[styles.pixelCorner, styles.topRight]} />
                     <View style={[styles.pixelCorner, styles.bottomLeft]} />
