@@ -5,6 +5,9 @@ import useAuth from "../src/hooks/useAuth";
 const IndexScreen = () => {
   const { user, loading } = useAuth();
 
+  console.log("Hello World from IndexScreen");
+  
+
   useEffect(() => {
     if (!loading) {
       if (!user) {
