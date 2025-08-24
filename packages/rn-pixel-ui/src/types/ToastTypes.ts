@@ -1,18 +1,23 @@
-export type ToastType = (typeof TOAST_TYPES)[keyof typeof TOAST_TYPES];
-
 export const TOAST_TYPES = {
-    SUCCESS: "success",
-    ERROR: "error",
-    WARNING: "warning",
-    INFO: "info",
-    DEFAULT: "default",
-};
+  DEFAULT: "DEFAULT",
+  SUCCESS: "SUCCESS",
+  ERROR:   "ERROR",
+  WARNING: "WARNING",
+  INFO:    "INFO",
+} as const;
 
-export type PixelToastShowFn = (message: string, type?: ToastType, duration?: number) => void;
-export type PixelToastTypeFns = { (message: string, duration?: number): void };
+export type ToastType = typeof TOAST_TYPES[keyof typeof TOAST_TYPES];
 
+/** The API for the container’s show() and the global PixelToast.show() */
+export type PixelToastShowFn = (
+  message: string,
+  type?: ToastType,
+  duration?: number   // ← WIDE number, not a literal
+) => void;
+
+export type ToastTypeFns = (message: string, duration?: number) => void;
+
+/** The ref shape the container registers globally */
 export type ToastRefType = {
-    current: {
-        show: PixelToastShowFn;
-    } | null;
-}
+  current: { show: PixelToastShowFn } | null;
+};

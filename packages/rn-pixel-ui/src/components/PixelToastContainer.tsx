@@ -1,6 +1,6 @@
 import { Animated, StyleSheet, Text, Dimensions } from "react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TOAST_TYPES, ToastType } from "../types/ToastTypes";
+import { PixelToastShowFn, TOAST_TYPES, ToastType } from "../types/ToastTypes";
 import { pixelTheme } from "../theme/theme";
 import { setToastRef, DURATION } from "../utils/PixelToast";
 
@@ -8,127 +8,75 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const PixelToastContainer = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [message, setMessage] = useState("");
-  const [type, setType] = useState(TOAST_TYPES.DEFAULT);
+  const [message, setMessage]   = useState("");
+  const [type, setType]         = useState<ToastType>(TOAST_TYPES.DEFAULT);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const hide = useCallback(() => {
-    Animated.timing(animatedValue, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      setIsVisible(false);
-    });
+    Animated.timing(animatedValue, { toValue: 0, duration: 300, useNativeDriver: true })
+      .start(() => setIsVisible(false));
   }, [animatedValue]);
 
-  interface ShowFn {
-    (newMessage: string, newType?: ToastType, duration?: number): void;
-  }
+  const show: PixelToastShowFn = useCallback(
+  (newMessage, newType = TOAST_TYPES.DEFAULT, duration = DURATION.SHORT) => {
+    if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
 
-  const show: ShowFn = useCallback(
-    (newMessage, newType = TOAST_TYPES.DEFAULT, duration = DURATION.SHORT) => {
-      if (hideTimeoutRef.current) {
-        clearTimeout(hideTimeoutRef.current);
-      }
+    setMessage(newMessage);
+    setType(newType);
+    setIsVisible(true);
 
-      setMessage(newMessage);
-      setType(newType);
-      setIsVisible(true);
-
-      Animated.timing(animatedValue, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-
-      hideTimeoutRef.current = setTimeout(() => {
-        hide();
-      }, duration);
-    },
-    [animatedValue, hide]
-  );
+    Animated.timing(animatedValue, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+    hideTimeoutRef.current = setTimeout(hide, duration);
+  },
+  [animatedValue, hide]
+);
 
   useEffect(() => {
-    // register this container’s show() with the global toast ref
     setToastRef({ current: { show } });
-
     return () => {
-      if (hideTimeoutRef.current) {
-        clearTimeout(hideTimeoutRef.current);
-      }
-      // unregister on unmount
+      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
       setToastRef(null);
     };
   }, [show]);
 
   const getToastStyle = useCallback(() => {
-    const baseStyle = styles.toastContainer;
-
+    const base = styles.toastContainer;
     switch (type) {
-      case TOAST_TYPES.SUCCESS:
-        return [baseStyle, styles.successToast];
-      case TOAST_TYPES.ERROR:
-        return [baseStyle, styles.errorToast];
-      case TOAST_TYPES.WARNING:
-        return [baseStyle, styles.warningToast];
-      case TOAST_TYPES.INFO:
-        return [baseStyle, styles.infoToast];
-      default:
-        return [baseStyle, styles.defaultToast];
+      case TOAST_TYPES.SUCCESS: return [base, styles.successToast];
+      case TOAST_TYPES.ERROR:   return [base, styles.errorToast];
+      case TOAST_TYPES.WARNING: return [base, styles.warningToast];
+      case TOAST_TYPES.INFO:    return [base, styles.infoToast];
+      default:                  return [base, styles.defaultToast];
     }
   }, [type]);
 
   const getGlowStyle = useCallback(() => {
     switch (type) {
-      case TOAST_TYPES.SUCCESS:
-        return { ...styles.glowEffect, shadowColor: pixelTheme.colors.success };
-      case TOAST_TYPES.ERROR:
-        return { ...styles.glowEffect, shadowColor: pixelTheme.colors.danger };
-      case TOAST_TYPES.WARNING:
-        return { ...styles.glowEffect, shadowColor: pixelTheme.colors.warning };
-      case TOAST_TYPES.INFO:
-        return { ...styles.glowEffect, shadowColor: pixelTheme.colors.primary };
-      default:
-        return { ...styles.glowEffect, shadowColor: pixelTheme.colors.glow };
+      case TOAST_TYPES.SUCCESS: return { ...styles.glowEffect, shadowColor: pixelTheme.colors.success };
+      case TOAST_TYPES.ERROR:   return { ...styles.glowEffect, shadowColor: pixelTheme.colors.danger };
+      case TOAST_TYPES.WARNING: return { ...styles.glowEffect, shadowColor: pixelTheme.colors.warning };
+      case TOAST_TYPES.INFO:    return { ...styles.glowEffect, shadowColor: pixelTheme.colors.primary };
+      default:                  return { ...styles.glowEffect, shadowColor: pixelTheme.colors.glow };
     }
   }, [type]);
 
-  if (!isVisible) {
-    return null;
-  }
+  if (!isVisible) return null;
 
-  const translateY = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [-100, 0],
-  });
-
-  const opacity = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 1],
-  });
+  const translateY = animatedValue.interpolate({ inputRange: [0, 1], outputRange: [-100, 0] });
+  const opacity    = animatedValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          transform: [{ translateY }],
-          opacity,
-        },
-      ]}
-    >
+    <Animated.View style={[styles.container, { transform: [{ translateY }], opacity }]}>
       <Animated.View style={[getToastStyle(), getGlowStyle()]}>
         <Animated.View style={styles.pixelBorder}>
-          <Text style={styles.toastText} numberOfLines={3}>
-            {message}
-          </Text>
+          <Text style={styles.toastText} numberOfLines={3}>{message}</Text>
         </Animated.View>
       </Animated.View>
     </Animated.View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -163,23 +111,23 @@ const styles = StyleSheet.create({
   },
   defaultToast: {
     backgroundColor: pixelTheme.colors.backgroundLight,
-    borderColor: pixelTheme.colors.primary,
+    borderColor: pixelTheme.colors.grayLight + "22",
   },
   successToast: {
-    backgroundColor: pixelTheme.colors.backgroundLight,
-    borderColor: pixelTheme.colors.success,
+    backgroundColor: pixelTheme.colors.success, // greenish tint
+    borderColor: pixelTheme.colors.grayLight + "22",
   },
   errorToast: {
-    backgroundColor: pixelTheme.colors.backgroundLight,
-    borderColor: pixelTheme.colors.danger,
+    backgroundColor: pixelTheme.colors.danger,  // reddish tint
+    borderColor: pixelTheme.colors.grayLight + "22",
   },
   warningToast: {
-    backgroundColor: pixelTheme.colors.backgroundLight,
-    borderColor: pixelTheme.colors.warning,
+    backgroundColor: pixelTheme.colors.warning, // yellowish tint
+    borderColor: pixelTheme.colors.grayLight + "22",
   },
   infoToast: {
-    backgroundColor: pixelTheme.colors.backgroundLight,
-    borderColor: pixelTheme.colors.primary,
+    backgroundColor: pixelTheme.colors.primary, // bluish tint
+    borderColor: pixelTheme.colors.grayLight + "22",
   },
   toastText: {
     color: pixelTheme.colors.text,
