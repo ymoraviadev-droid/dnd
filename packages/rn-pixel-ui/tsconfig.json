@@ -1,0 +1,12 @@
+{
+  "extends": "../typescript-config/tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "outDir": "dist",
+    "skipLibCheck": true
+    // do NOT set "types": ["react-native"] here
+  },
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
+}
