@@ -43,4 +43,6 @@ docker-compose*.yml
 .env
 
 # Bruno Collections
-bruno/*
+bruno
+
+apps/dm-service/models

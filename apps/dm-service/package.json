@@ -1,0 +1,24 @@
+{
+  "name": "@dnd/llama-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist",
+    "download-models": "node scripts/download-models.js"
+  },
+  "dependencies": {
+    "node-llama-cpp": "^3.1.0"
+  },
+  "devDependencies": {
+    "@dnd/typescript-config": "workspace:*",
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
