@@ -1,21 +1,16 @@
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
-import {
-  LoginBody,
-  LoginSchema,
-} from "@dnd/zod-schemas";
+import { LoginBody, LoginSchema } from "@dnd/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { useCallback, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { PixelInput, PixelButton, pixelTheme } from "rn-pixel-ui";
 import useAuth from "../../src/hooks/useAuth";
 
-const CreatePlayerScreen = () => {
+const LoginScreen = () => {
   const { login } = useAuth();
 
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors, isSubmitting, isValid },
   } = useForm<LoginBody>({
     resolver: zodResolver(LoginSchema),
@@ -25,34 +20,6 @@ const CreatePlayerScreen = () => {
     },
   } as LoginBody
   );
-
-  const generateAbilityScore = () => {
-    const rolls = [
-      Math.floor(Math.random() * 6) + 1,
-      Math.floor(Math.random() * 6) + 1,
-      Math.floor(Math.random() * 6) + 1,
-      Math.floor(Math.random() * 6) + 1,
-    ].sort((a, b) => b - a);
-    return rolls[0] + rolls[1] + rolls[2];
-  };
-
-  const rerollAbilities = useCallback(() => {
-    setValue("abilities.str", generateAbilityScore());
-    setValue("abilities.dex", generateAbilityScore());
-    setValue("abilities.con", generateAbilityScore());
-    setValue("abilities.int", generateAbilityScore());
-    setValue("abilities.wis", generateAbilityScore());
-    setValue("abilities.cha", generateAbilityScore());
-  }, [setValue]);
-
-  useEffect(() => {
-    rerollAbilities();
-  }, [rerollAbilities]);
-
-  const abilities = useWatch({
-    control,
-    name: "abilities",
-  });
 
   return (
     <KeyboardAvoidingView
@@ -147,50 +114,9 @@ const styles = StyleSheet.create({
     marginBottom: pixelTheme.spacing.sm,
     textAlign: "center",
   },
-  abilitiesContainer: {
-    marginTop: pixelTheme.spacing.xl,
-    marginBottom: pixelTheme.spacing.lg,
-    paddingVertical: pixelTheme.spacing.md,
-    backgroundColor: pixelTheme.colors.shadow,
-    padding: pixelTheme.spacing.sm,
-    borderRadius: pixelTheme.borderRadius.pixel,
-  },
-  sectionTitle: {
-    fontFamily: pixelTheme.fonts.regular,
-    fontSize: 14,
-    color: pixelTheme.colors.primary,
-    textAlign: "center",
-    marginBottom: pixelTheme.spacing.md,
-  },
-  abilitiesGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    paddingHorizontal: pixelTheme.spacing.sm,
-  },
-  abilityItem: {
-    alignItems: "center",
-    marginHorizontal: pixelTheme.spacing.sm,
-    marginBottom: pixelTheme.spacing.sm,
-    flex: 1,
-  },
-  abilityLabel: {
-    fontFamily: pixelTheme.fonts.regular,
-    fontSize: 10,
-    color: pixelTheme.colors.grayLight,
-    marginBottom: pixelTheme.spacing.xs,
-  },
-  abilityValue: {
-    fontFamily: pixelTheme.fonts.regular,
-    fontSize: 16,
-    color: pixelTheme.colors.primary,
-    textShadowColor: pixelTheme.colors.glow,
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 0,
-  },
   button: {
     marginVertical: pixelTheme.spacing.sm,
   },
 });
 
-export default CreatePlayerScreen;
+export default LoginScreen;
