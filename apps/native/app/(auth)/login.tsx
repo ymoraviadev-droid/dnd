@@ -1,9 +1,10 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { LoginBody, LoginSchema } from "@dnd/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { PixelInput, PixelButton, pixelTheme } from "rn-pixel-ui";
 import useAuth from "../../src/hooks/useAuth";
+import { router } from "expo-router";
 
 const LoginScreen = () => {
   const { login } = useAuth();
@@ -74,6 +75,20 @@ const LoginScreen = () => {
           size="large"
           style={styles.button}
         />
+
+        <Text style={{ ...styles.lowwerText, marginVertical: 10 }}>
+          Dont have an account?
+        </Text>
+        <View style={{ flexDirection: "row", gap: pixelTheme.spacing.sm }}>
+          <Text style={styles.lowwerText}>
+            Sign up
+          </Text>
+          <TouchableOpacity onPress={() => { router.push("/signup") }}>
+            <Text style={{ ...styles.lowwerText, ...styles.link }}>
+              Here.
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -102,6 +117,15 @@ const styles = StyleSheet.create({
     color: pixelTheme.colors.text,
     marginBottom: pixelTheme.spacing.lg,
     textAlign: "center",
+  },
+  lowwerText: {
+    fontSize: 10,
+    fontFamily: pixelTheme.fonts.regular,
+    color: pixelTheme.colors.text,
+  },
+  link: {
+    color: pixelTheme.colors.accent,
+    textDecorationLine: "underline",
   },
   input: {
     height: 50,

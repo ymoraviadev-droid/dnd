@@ -44,7 +44,19 @@ const useAuth = () => {
         }
     };
 
-    return { user, login, logout, loading, players, setPlayers };
+    const signup = async (data: LoginBody) => {
+        try {
+            await sendApiRequest.post("/auth", data);
+            PixelToast.success("Signup successful, logging in...");
+            await login({ email: data.email, password: data.password });
+            return true;
+        } catch (error) {
+            console.log(error);
+            PixelToast.error("Signup failed");
+            return false;
+        }
+    };
+    return { user, login, logout, loading, players, setPlayers, signup };
 };
 
 export default useAuth;
