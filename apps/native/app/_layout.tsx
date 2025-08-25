@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import AuthProvider from "../src/store/auth/Auth.provider";
 import useAuth from "../src/hooks/useAuth";
 import GameProvider from "../src/store/game/Game.provider";
-import PixelToastContainer from "../src/components/PixelToast";
+import { PixelThemeProvider, PixelToastContainer } from "rn-pixel-ui";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,11 +37,13 @@ function RootStack() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <GameProvider>
-        <RootStack />
-        <PixelToastContainer />
-      </GameProvider>
-    </AuthProvider>
+    <PixelThemeProvider>
+      <AuthProvider>
+        <GameProvider>
+          <RootStack />
+          <PixelToastContainer />
+        </GameProvider>
+      </AuthProvider>
+    </PixelThemeProvider>
   );
 }

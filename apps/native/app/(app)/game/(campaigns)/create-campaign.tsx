@@ -3,10 +3,8 @@ import { CreateCampaignInput, CreateCampaignSchema } from "@dnd/zod-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
-import PixelButton from "../../../../src/components/forms/PixelButton";
-import PixelInput from "../../../../src/components/forms/PixelInput";
 import useGame from "../../../../src/hooks/useGame";
-import { pixelTheme } from "../../../../src/themes/pixelTheme";
+import { PixelInput, PixelButton, pixelTheme } from "rn-pixel-ui";
 
 const CreateCampaignScreen = () => {
   const { createCampaign } = useGame();

@@ -10,11 +10,10 @@ import { router } from "expo-router";
 import useAuth from "../../../../src/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts, PressStart2P_400Regular } from "@expo-google-fonts/press-start-2p";
-import PixelButton from "../../../../src/components/forms/PixelButton";
-import { pixelTheme } from "../../../../src/themes/pixelTheme";
 import useGame from "../../../../src/hooks/useGame";
 import { useEffect, useState } from "react";
 import { ICampaign } from "@dnd/types";
+import { pixelTheme, PixelButton } from "rn-pixel-ui";
 
 const CampaignLobbyScreen = () => {
   const { user } = useAuth();

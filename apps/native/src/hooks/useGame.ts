@@ -3,9 +3,9 @@ import gameContext from "../store/game/game.context";
 import useAuth from "./useAuth";
 import { sendApiRequest } from "../utils/sendApiRequest";
 import { IPlayer } from "@dnd/types";
-import { PixelToast } from "../components/PixelToast";
 import { CreateCampaignInput } from "@dnd/zod-schemas";
 import { router } from "expo-router";
+import { PixelToast } from "rn-pixel-ui";
 
 const useGame = () => {
     const { players, setPlayers } = useAuth();

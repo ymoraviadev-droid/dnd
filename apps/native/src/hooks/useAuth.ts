@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginBody } from "@dnd/zod-schemas";
 import { sendApiRequest } from "../utils/sendApiRequest";
 import { router } from "expo-router";
-import { PixelToast } from "../components/PixelToast";
+import { PixelToast } from "rn-pixel-ui";
 
 const useAuth = () => {
     const context = useContext(authContext);

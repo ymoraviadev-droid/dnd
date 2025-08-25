@@ -157,6 +157,9 @@ importers:
       react-native-webview:
         specifier: 13.13.5
         version: 13.13.5(react-native@0.79.5(@babel/core@7.28.3)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      rn-pixel-ui:
+        specifier: workspace:*
+        version: link:../../packages/rn-pixel-ui
     devDependencies:
       '@babel/core':
         specifier: ^7.25.2

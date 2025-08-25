@@ -17,7 +17,6 @@ export default function Index() {
       <PixelButton label="Secondary Button" variant="secondary" onPress={() => PixelToast.error("Error Variant!")}/>
       <PixelButton label="Danger Button" variant="danger" onPress={() => PixelToast.error("Error Variant!")}/>
       <PixelButton label="Ghost Button" variant="ghost" onPress={() => PixelToast.show("Show Variant!")}/>
-
     </View>
   );
 }

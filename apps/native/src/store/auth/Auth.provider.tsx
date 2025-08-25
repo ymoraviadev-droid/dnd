@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import authContext from "./auth.context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { sendApiRequest } from "../../utils/sendApiRequest";
-import { PixelToast } from "../../components/PixelToast";
+import { PixelToast } from "rn-pixel-ui";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
