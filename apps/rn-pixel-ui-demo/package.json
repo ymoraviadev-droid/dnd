@@ -9,6 +9,11 @@
     "web": "expo start --web",
     "lint": "expo lint"
   },
+  "expo": {
+    "assets": [
+      "./assets/fonts/*"
+    ]
+  },
   "dependencies": {
     "@expo-google-fonts/press-start-2p": "^0.4.0",
     "@expo/vector-icons": "^14.1.0",

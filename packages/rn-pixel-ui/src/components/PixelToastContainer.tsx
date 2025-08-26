@@ -8,8 +8,8 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const PixelToastContainer = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [message, setMessage]   = useState("");
-  const [type, setType]         = useState<ToastType>(TOAST_TYPES.DEFAULT);
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState<ToastType>(TOAST_TYPES.DEFAULT);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -19,18 +19,18 @@ const PixelToastContainer = () => {
   }, [animatedValue]);
 
   const show: PixelToastShowFn = useCallback(
-  (newMessage, newType = TOAST_TYPES.DEFAULT, duration = DURATION.SHORT) => {
-    if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+    (newMessage, newType = TOAST_TYPES.DEFAULT, duration = DURATION.SHORT) => {
+      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
 
-    setMessage(newMessage);
-    setType(newType);
-    setIsVisible(true);
+      setMessage(newMessage);
+      setType(newType);
+      setIsVisible(true);
 
-    Animated.timing(animatedValue, { toValue: 1, duration: 300, useNativeDriver: true }).start();
-    hideTimeoutRef.current = setTimeout(hide, duration);
-  },
-  [animatedValue, hide]
-);
+      Animated.timing(animatedValue, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+      hideTimeoutRef.current = setTimeout(hide, duration);
+    },
+    [animatedValue, hide]
+  );
 
   useEffect(() => {
     setToastRef({ current: { show } });
@@ -44,27 +44,27 @@ const PixelToastContainer = () => {
     const base = styles.toastContainer;
     switch (type) {
       case TOAST_TYPES.SUCCESS: return [base, styles.successToast];
-      case TOAST_TYPES.ERROR:   return [base, styles.errorToast];
+      case TOAST_TYPES.ERROR: return [base, styles.errorToast];
       case TOAST_TYPES.WARNING: return [base, styles.warningToast];
-      case TOAST_TYPES.INFO:    return [base, styles.infoToast];
-      default:                  return [base, styles.defaultToast];
+      case TOAST_TYPES.INFO: return [base, styles.infoToast];
+      default: return [base, styles.defaultToast];
     }
   }, [type]);
 
   const getGlowStyle = useCallback(() => {
     switch (type) {
       case TOAST_TYPES.SUCCESS: return { ...styles.glowEffect, shadowColor: pixelTheme.colors.success };
-      case TOAST_TYPES.ERROR:   return { ...styles.glowEffect, shadowColor: pixelTheme.colors.danger };
+      case TOAST_TYPES.ERROR: return { ...styles.glowEffect, shadowColor: pixelTheme.colors.danger };
       case TOAST_TYPES.WARNING: return { ...styles.glowEffect, shadowColor: pixelTheme.colors.warning };
-      case TOAST_TYPES.INFO:    return { ...styles.glowEffect, shadowColor: pixelTheme.colors.primary };
-      default:                  return { ...styles.glowEffect, shadowColor: pixelTheme.colors.glow };
+      case TOAST_TYPES.INFO: return { ...styles.glowEffect, shadowColor: pixelTheme.colors.primary };
+      default: return { ...styles.glowEffect, shadowColor: pixelTheme.colors.glow };
     }
   }, [type]);
 
   if (!isVisible) return null;
 
   const translateY = animatedValue.interpolate({ inputRange: [0, 1], outputRange: [-100, 0] });
-  const opacity    = animatedValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
+  const opacity = animatedValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY }], opacity }]}>
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   toastContainer: {
     minHeight: 60,
     maxWidth: SCREEN_WIDTH - pixelTheme.spacing.lg * 2,
+    minWidth: 300,
     paddingHorizontal: pixelTheme.spacing.lg,
     paddingVertical: pixelTheme.spacing.md,
     borderRadius: pixelTheme.borderRadius.pixel,
@@ -111,23 +112,23 @@ const styles = StyleSheet.create({
   },
   defaultToast: {
     backgroundColor: pixelTheme.colors.backgroundLight,
-    borderColor: pixelTheme.colors.grayLight + "22",
+    borderColor: pixelTheme.colors.grayLight,
   },
   successToast: {
-    backgroundColor: pixelTheme.colors.success, // greenish tint
-    borderColor: pixelTheme.colors.grayLight + "22",
+    backgroundColor: pixelTheme.colors.backgroundLight, // greenish tint
+    borderColor: pixelTheme.colors.success,
   },
   errorToast: {
-    backgroundColor: pixelTheme.colors.danger,  // reddish tint
-    borderColor: pixelTheme.colors.grayLight + "22",
+    backgroundColor: pixelTheme.colors.backgroundLight,  // reddish tint
+    borderColor: pixelTheme.colors.danger,
   },
   warningToast: {
-    backgroundColor: pixelTheme.colors.warning, // yellowish tint
-    borderColor: pixelTheme.colors.grayLight + "22",
+    backgroundColor: pixelTheme.colors.backgroundLight, // yellowish tint
+    borderColor: pixelTheme.colors.warning,
   },
   infoToast: {
-    backgroundColor: pixelTheme.colors.primary, // bluish tint
-    borderColor: pixelTheme.colors.grayLight + "22",
+    backgroundColor: pixelTheme.colors.backgroundLight, // bluish tint
+    borderColor: pixelTheme.colors.primaryDark,
   },
   toastText: {
     color: pixelTheme.colors.text,
