@@ -40,7 +40,7 @@ class DbService {
         const sequelize = DbService.getInstance();
         try {
             await sequelize.authenticate();
-            console.log('✅ Database connection established');
+            log.info('Database connection established');
 
             if (env.NODE_ENV === 'development') {
                 await sequelize.sync({ alter: true });

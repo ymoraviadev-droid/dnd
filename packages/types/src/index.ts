@@ -10,3 +10,6 @@ export type * from './game/IWorldTile.js';
 export type * from './game/ICampaign.js';
 
 export type * from './game/Unions.js';
+
+export type * from './db/DbResponse.js';
+export type * from './db/DbRequest.js';

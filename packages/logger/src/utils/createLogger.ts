@@ -10,30 +10,37 @@ export const createLogger = (opts: CreateLoggerOptions) => {
     const { service, forceJson } = opts;
     const isProd =
         process.env.NODE_ENV === "production" || process.env.DOCKER === "true";
-    const pretty = !forceJson && process.stdout.isTTY && !isProd;
 
     const emit = (type: LogTypes, message: string, meta?: LogMeta) => {
-        const ts = DateTime.now().toISO();
+        const ts = DateTime.now().toISO(); // same timestamp you used
 
-        // 1) Structured JSON (Docker-friendly)
-        writeJson({
-            ts,
-            service,
-            level: type,
-            lvl: levelOrder[type],
-            msg: message,
-            ...meta,
-        });
+        // Decide output mode:
+        // - prod or forceJson => JSON only (stdout)
+        // - otherwise (dev + TTY) => pretty only (stdout)
+        const jsonOnly = forceJson || isProd || !process.stdout.isTTY;
 
-        if (pretty) {
-            const color = variants[type] ?? variants.standard;
-            const tag = chalk.gray(`[${service}]`);
-            const time = chalk.gray(ts);
-            const metaSummary =
-                meta && Object.keys(meta).length ? chalk.dim(` ${JSON.stringify(meta)}`) : "";
-            process.stderr.write(`${time} ${tag} ${color(message)}${metaSummary}\n`);
+        if (jsonOnly) {
+            // Structured JSON for Docker / collectors
+            writeJson({
+                ts,
+                service,
+                level: type,
+                lvl: levelOrder[type],
+                msg: message,
+                ...meta,
+            });
+            return;
         }
-    }
+
+        // Pretty line for local dev
+        const color = variants[type] ?? variants.standard;
+        const tag = chalk.gray(`[${service}]`);
+        const time = chalk.gray(ts);
+        const metaSummary =
+            meta && Object.keys(meta).length ? chalk.dim(` ${JSON.stringify(meta)}`) : "";
+        // print to STDOUT (so you only see one line)
+        process.stdout.write(`${time} ${tag} ${color(message)}${metaSummary}\n`);
+    };
 
     return {
         log: (msg: string, type: LogTypes = "standard", meta?: LogMeta) =>

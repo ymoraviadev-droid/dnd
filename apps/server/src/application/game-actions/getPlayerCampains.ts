@@ -1,5 +1,5 @@
-import { campaignRepo } from "../../infrastructure/db/repositories/Campaign.repo.js";
+import { getAllPlayerCampaigns } from "../../infrastructure/db/adapters/campaignRepoAdapter.js";
 
 export const getPlayerCampaigns = async (playerId: number) => {
-    return campaignRepo.getAllPlayerCampaigns(playerId);
+    return getAllPlayerCampaigns(playerId);
 };

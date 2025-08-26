@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
 import { env } from "@dnd/env";
-import { log } from "../../utils/log.js";
+import { createLogger } from "@dnd/logger";
 import { badPathHandler, errorHandler } from "./middlewares/errors.mw.js";
 import { morganLogger } from "./middlewares/morganLogger.mw.js";
 import { mainRouter } from "./routes/main.routes.js";
+
+const log = createLogger({ service: "server" });
 
 export const startServer = async () => {
     const app = express();
@@ -23,6 +25,6 @@ export const startServer = async () => {
 
     // start server
     app.listen(env.PORT, () => {
-        log(`Server running on http://localhost:${env.PORT}`, "secondary");
+        log.success(`Server running on http://localhost:${env.PORT}`);
     });
 }
