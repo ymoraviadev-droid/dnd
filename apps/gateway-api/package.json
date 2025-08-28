@@ -1,5 +1,5 @@
 {
-    "name": "@dnd/server",
+    "name": "@dnd/gateway-api",
     "private": true,
     "type": "module",
     "main": "dist/index.js",
