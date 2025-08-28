@@ -1,8 +1,9 @@
 import type { RequestHandler } from 'express';
 import type { ZodSchema } from '@dnd/zod-schemas';
-import { log } from '../../../utils/log.js';
+import { createLogger } from '@dnd/logger';
 
 type Part = 'body' | 'query' | 'params' | 'headers';
+const log = createLogger({ service: 'server' });
 
 export const validate = (part: Part, schema: ZodSchema): RequestHandler => async (req, res, next) => {
     try {
@@ -10,7 +11,7 @@ export const validate = (part: Part, schema: ZodSchema): RequestHandler => async
         (req as any)[part] = parsed;
         next();
     } catch (e: any) {
-        log(`Validation error on ${req.method} ${req.url} - ${part}: ${JSON.stringify(e?.issues ?? e)}`, "error");
+        log.error(`Validation error on ${req.method} ${req.url} - ${part}: ${JSON.stringify(e?.issues ?? e)}`);
         res.status(400).json({ error: 'ValidationError', issues: e?.issues ?? [] });
     }
 };

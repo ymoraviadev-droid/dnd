@@ -3,13 +3,11 @@ import { sendMail } from './mailer.js';
 import { renderByKind } from '../utils/renderByKind.js';
 import { createLogger } from '@dnd/logger';
 
-const log = createLogger({ service: 'mail-service' });
-log.patchConsole();
-
 const STREAM = 'mail:req';
 const GROUP = 'mail:service';
 const DLQ = 'mail:dlq';
 const CONSUMER = `worker-${process.pid}`;
+const log = createLogger({ service: 'mail-service' });
 
 const parse = (m: Record<string, string>) => {
     const o: any = {};

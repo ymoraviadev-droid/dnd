@@ -22,6 +22,49 @@ importers:
         specifier: ^2.5.6
         version: 2.5.6
 
+  apps/auth-service:
+    dependencies:
+      '@dnd/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      '@dnd/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@dnd/rpc-client':
+        specifier: workspace:*
+        version: link:../../packages/rpc-client
+      '@dnd/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@dnd/zod-schemas':
+        specifier: workspace:*
+        version: link:../../packages/zod-schemas
+      dotenv:
+        specifier: ^17.2.1
+        version: 17.2.1
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
+    devDependencies:
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
+      '@types/node':
+        specifier: ^24.2.0
+        version: 24.3.0
+      rimraf:
+        specifier: ^5.0.10
+        version: 5.0.10
+      ts-node-dev:
+        specifier: ^2.0.0
+        version: 2.0.0(@types/node@24.3.0)(typescript@5.9.2)
+      tsx:
+        specifier: ^4.20.3
+        version: 4.20.5
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
   apps/db-service:
     dependencies:
       chalk:
@@ -374,45 +417,21 @@ importers:
 
   apps/server:
     dependencies:
-      chalk:
-        specifier: ^5.3.0
-        version: 5.6.0
-      cookie-parser:
-        specifier: ^1.4.7
-        version: 1.4.7
       cors:
         specifier: ^2.8.5
         version: 2.8.5
       express:
         specifier: ^4.21.2
         version: 4.21.2
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.2
       luxon:
         specifier: ^3.7.1
         version: 3.7.1
       morgan:
         specifier: ^1.10.1
         version: 1.10.1
-      pg:
-        specifier: ^8.16.3
-        version: 8.16.3
       redis:
         specifier: ^5.8.2
         version: 5.8.2
-      reflect-metadata:
-        specifier: ^0.2.2
-        version: 0.2.2
-      sequelize:
-        specifier: ^6.37.7
-        version: 6.37.7(pg@8.16.3)
-      sequelize-typescript:
-        specifier: ^2.1.6
-        version: 2.1.6(@types/node@24.3.0)(@types/validator@13.15.2)(reflect-metadata@0.2.2)(sequelize@6.37.7(pg@8.16.3))
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
     devDependencies:
       '@dnd/env':
         specifier: workspace:*
@@ -438,9 +457,6 @@ importers:
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.23
-      '@types/jsonwebtoken':
-        specifier: ^9.0.10
-        version: 9.0.10
       '@types/luxon':
         specifier: ^3.7.1
         version: 3.7.1
@@ -3167,19 +3183,11 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  cookie-parser@1.4.7:
-    resolution: {integrity: sha512-nGUvgXnotP3BsjiLX2ypbQnWoGUPIIfHQNZkkC668ntrzGWEZVW70HDEB1qnNGMicPje6EttlIgzo51YSwNQGw==}
-    engines: {node: '>= 0.8.0'}
-
   cookie-signature@1.0.6:
     resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
 
   cookie@0.7.1:
     resolution: {integrity: sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==}
-    engines: {node: '>= 0.6'}
-
-  cookie@0.7.2:
-    resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
   core-js-compat@3.45.1:
@@ -5476,6 +5484,10 @@ packages:
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
     deprecated: Rimraf versions prior to v4 are no longer supported
+    hasBin: true
+
+  rimraf@5.0.10:
+    resolution: {integrity: sha512-l0OE8wL34P4nJH/H2ffoaniAokM2qSmrtXHmlpvYr5AVVX8msAyW0l8NVJFDxlSK4u3Uh/f41cQheDVdnYijwQ==}
     hasBin: true
 
   rimraf@6.0.1:
@@ -9706,16 +9718,9 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  cookie-parser@1.4.7:
-    dependencies:
-      cookie: 0.7.2
-      cookie-signature: 1.0.6
-
   cookie-signature@1.0.6: {}
 
   cookie@0.7.1: {}
-
-  cookie@0.7.2: {}
 
   core-js-compat@3.45.1:
     dependencies:
@@ -12420,6 +12425,10 @@ snapshots:
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.3
+
+  rimraf@5.0.10:
+    dependencies:
+      glob: 10.4.5
 
   rimraf@6.0.1:
     dependencies:

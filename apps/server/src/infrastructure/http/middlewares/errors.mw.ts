@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
-import { log } from '../../../utils/log.js';
+import { createLogger } from '@dnd/logger';
+
+const log = createLogger({ service: 'server' });
 
 export const badPathHandler = (req: Request, res: Response) => {
-    log(`Bad path: ${req.url}`, 'error');
+    log.error(`Bad path: ${req.url}`);
     res.status(404).send("404 - Not Found");
 }
 
 export const errorHandler = (err: Error, _: Request, res: Response, next: NextFunction) => {
-    log(`Error: ${err.message}`, 'error');
+    log.error(`Error: ${err.message}`);
     console.log(err.stack);
     res.status(500).json({ error: err.message });
     next(err);

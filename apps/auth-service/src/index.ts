@@ -1,13 +1,15 @@
 import { initialize } from "./infrastructure/consumer.js";
-import { createLogger } from '@dnd/logger';
+import { dbReady } from "./infrastructure/dbClient.js";
+import { createLogger } from "@dnd/logger";
 
-const log = createLogger({ service: 'mail-service' });
+const log = createLogger({ service: "auth-service" });
 
 (async () => {
+    await dbReady;
     const stop = await initialize();
 
     const shutdown = async (sig: string) => {
-        log.error(`${sig} received. shutting down mail-service...`);
+        log.info(`${sig} received. shutting down auth-service...`);
         try { await stop?.(); } catch { }
         process.exit(0);
     };

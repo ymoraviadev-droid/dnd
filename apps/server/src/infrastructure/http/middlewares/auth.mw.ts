@@ -1,16 +1,8 @@
 // src/infrastructure/http/middleware/auth.ts
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { DateTime } from "luxon";
 import { env } from "@dnd/env";
-import { hashToken } from "../../../utils/hash.js";
-import { generateToken } from "../../../utils/jwt.js";
-import {
-    findRefreshTokenByHash,
-    getUserById,
-    revokeRefreshTokenByHash,
-    createRefreshToken
-} from "../../db/adapters/authRepoAdapter.js";
+import { rotateWithRefresh } from "../../auth/authAdapters.js"; // <-- your adapter
 
 const ACCESS_HEADER = "x-access-token";   // "Bearer <token>"
 const REFRESH_HEADER = "x-refresh-token"; // native clients only
@@ -30,7 +22,7 @@ const getRefresh = (req: Request): string | null => {
 
 export async function auth(req: Request, res: Response, next: NextFunction) {
     try {
-        // 1) Try Access token first
+        // Fast path: valid access token
         const access = getBearer(req);
         if (access) {
             try {
@@ -38,65 +30,41 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
                 req.userId = payload.id;
                 return next();
             } catch (e: any) {
-                const jwtErrors = ["TokenExpiredError", "JsonWebTokenError", "NotBeforeError"];
-                if (!jwtErrors.includes(e?.name)) {
+                const known = ["TokenExpiredError", "JsonWebTokenError", "NotBeforeError"];
+                if (!known.includes(e?.name)) {
                     throw new Error("Unauthorized");
                 }
-                // fall through to refresh flow on known JWT errors
+                // else: fall through to refresh rotation
             }
         }
 
-        // 2) Use Refresh token to rotate + mint new access/refresh
+        // Fallback: rotate via auth-service using the refresh token
         const refresh = getRefresh(req);
         if (!refresh) throw new Error("Unauthorized");
 
-        let payload: { id: number };
-        try {
-            payload = jwt.verify(refresh, env.REFRESH_SECRET) as { id: number };
-            if (!payload || typeof payload.id !== "number") throw new Error("Unauthorized");
-        } catch {
+        const ua = String(req.headers["user-agent"] ?? "") || null;
+        const ip = String(req.ip ?? "") || null;
+
+        const rotated = await rotateWithRefresh(refresh, ua, ip);
+        if (!rotated?.accessToken || !rotated?.refreshToken) {
             throw new Error("Unauthorized");
         }
 
-        const tokenHash = hashToken(refresh);
-        const stored = await findRefreshTokenByHash(tokenHash);
+        // Set new tokens on the response
+        res.setHeader(ACCESS_HEADER, rotated.accessToken);
+        res.setHeader(REFRESH_HEADER, rotated.refreshToken);
 
-        const now = new Date();
-        if (!stored || stored.revokedAt || (stored.expiresAt && stored.expiresAt <= now)) {
-            throw new Error("Unauthorized");
+        // Attach user id
+        if (rotated.user?.id) {
+            req.userId = rotated.user.id;
+        } else {
+            // verify new access to extract id
+            const payload = jwt.verify(rotated.accessToken, env.JWT_SECRET) as { id: number };
+            req.userId = payload.id;
         }
 
-        const user = await getUserById(payload.id);
-        if (!user) throw new Error("Unauthorized");
-
-        const newAccess = generateToken(user.id, "access");
-        const newRefresh = generateToken(user.id, "refresh");
-        const newHash = hashToken(newRefresh);
-
-        // Best-effort rotate:
-        // a) revoke current by hash, link replacedByToken
-        await revokeRefreshTokenByHash(tokenHash, newHash);
-
-        // b) create new row
-        await createRefreshToken({
-            userId: user.id,
-            tokenHash: newHash,
-            issuedAt: now,
-            expiresAt: DateTime.now().plus({ days: 7 }).toJSDate(),
-            userAgent: String(req.headers["user-agent"] ?? "") || null,
-            ip: String(req.ip ?? "") || null,
-            replacedByToken: null,
-        });
-
-        // c) set headers
-        res.setHeader(ACCESS_HEADER, newAccess);
-        res.setHeader(REFRESH_HEADER, newRefresh);
-
-        req.userId = user.id;
         return next();
-    } catch (err) {
-        return res
-            .status(401)
-            .json({ error: err instanceof Error ? err.message : "Unauthorized" });
+    } catch {
+        return res.status(401).json({ error: "Unauthorized" });
     }
 }

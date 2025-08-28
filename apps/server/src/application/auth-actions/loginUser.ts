@@ -1,91 +1,35 @@
-import { DateTime } from 'luxon';
-import { Request } from 'express';
-import jwt from 'jsonwebtoken';
-import { env } from '@dnd/env';
-import { hashToken, verifyPassword } from '../../utils/hash.js';
-import { generateToken } from '../../utils/jwt.js';
-import { getRefreshTokenRow, updateRefreshTokenByUserId, getUserById, getUserByEmail, createRefreshToken } from '../../infrastructure/db/adapters/authRepoAdapter.js';
+// src/application/auth-actions/loginUser.ts
+import type { Request } from 'express';
+import { rotateWithRefresh, loginWithCredentials } from '../../infrastructure/auth/authAdapters.js';
 import { getPlayersByUserId } from '../../infrastructure/db/adapters/playerRepoAdapter.js';
 
 export const loginUser = async (req: Request) => {
     const ua = (req.headers['user-agent'] as string) ?? null;
     const ip = (req.ip as string) ?? null;
 
-    // ===== Mode A: login by token (auto-login) =====
+    // ===== Mode A: login by token (auto-login via auth-service rotate) =====
     const tokenParam = (req.params as any)?.token as string | undefined;
     if (tokenParam && tokenParam.trim()) {
-        let payload: any;
-        try {
-            payload = jwt.verify(tokenParam, env.REFRESH_SECRET);
-        } catch {
+        const rotated = await rotateWithRefresh(tokenParam, ua, ip);
+        if (!rotated?.accessToken || !rotated?.refreshToken || !rotated?.user) {
             throw new Error('Unauthorized');
         }
 
-        const userId = Number(payload?.id ?? payload?.sub);
-        if (!userId) throw new Error('Unauthorized');
-
-        const tokenHash = hashToken(tokenParam);
-        const existing = await getRefreshTokenRow(userId);
-        if (!existing || existing.tokenHash !== tokenHash || existing.revokedAt) {
-            throw new Error('Unauthorized');
-        }
-
-        const accessToken = generateToken(userId, 'access');
-        const refreshToken = generateToken(userId, 'refresh');
-        const newHash = hashToken(refreshToken);
-
-        await updateRefreshTokenByUserId(userId, {
-            tokenHash: newHash,
-            issuedAt: new Date(),
-            expiresAt: DateTime.now().plus({ days: 7 }).toJSDate(),
-            userAgent: ua,
-            ip,
-            revokedAt: null,
-            replacedByToken: null,
-        });
-
-        const user = await getUserById(userId);
-        if (!user) throw new Error('Unauthorized');
-
-        const players = await getPlayersByUserId(userId);
-
-        // strip sensitive fields if present
-        const { password: _pwd, createdAt, updatedAt, ...safe } = user;
-        return { user: safe, accessToken, refreshToken, players };
+        const players = await getPlayersByUserId(rotated.user.id);
+        const { password: _pwd, createdAt, updatedAt, ...safeUser } = rotated.user;
+        return { user: safeUser, accessToken: rotated.accessToken, refreshToken: rotated.refreshToken, players };
     }
 
-    // ===== Mode B: login by credentials =====
-    const { email, password } = req.body;
-    const user = await getUserByEmail(email);
-    if (!user) throw new Error('User not found');
+    // ===== Mode B: login by credentials (delegated to auth-service) =====
+    const { email, password } = req.body as { email: string; password: string };
+    if (!email || !password) throw new Error('Email and password are required');
 
-    const ok = await verifyPassword(password, user.password);
-    if (!ok) throw new Error('Invalid password');
-
-    const accessToken = generateToken(user.id, 'access');
-    const refreshToken = generateToken(user.id, 'refresh');
-    const newHash = hashToken(refreshToken);
-
-    const exists = await getRefreshTokenRow(user.id);
-    const rowData = {
-        userId: user.id,
-        tokenHash: newHash,
-        issuedAt: new Date(),
-        expiresAt: DateTime.now().plus({ days: 7 }).toJSDate(),
-        userAgent: ua,
-        ip,
-        revokedAt: null,
-        replacedByToken: null,
-    };
-
-    if (exists) {
-        await updateRefreshTokenByUserId(user.id, rowData);
-    } else {
-        await createRefreshToken(rowData);
+    const result = await loginWithCredentials(email, password, ua, ip);
+    if (!result?.user || !result?.accessToken || !result?.refreshToken) {
+        throw new Error('Unauthorized');
     }
 
-    const players = await getPlayersByUserId(user.id);
-
-    const { password: _pwd, createdAt, updatedAt, ...safe } = user;
-    return { user: safe, accessToken, refreshToken, players };
+    const players = await getPlayersByUserId(result.user.id);
+    const { password: _pwd, createdAt, updatedAt, ...safeUser } = result.user;
+    return { user: safeUser, accessToken: result.accessToken, refreshToken: result.refreshToken, players };
 };
