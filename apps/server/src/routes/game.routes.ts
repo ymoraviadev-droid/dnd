@@ -3,10 +3,10 @@ import { Router } from "express";
 import { catchAsync } from "../middlewares/catchAsync.mw.js";
 import { validate } from "../middlewares/validation.mw.js";
 import { CreatePlayerSchema, CreateCampaignSchema } from "@dnd/zod-schemas";
-import { createPlayer } from "../../../application/game-actions/createPlayer.js";
+import { createPlayer } from "../actions/game-actions/createPlayer.js";
 import { auth } from "../middlewares/auth.mw.js";
-import { createCampaignAndWorld } from "../../../application/game-actions/createCampaign.js";
-import { getPlayerCampaigns } from "../../../application/game-actions/getPlayerCampains.js";
+import { createCampaignAndWorld } from "../actions/game-actions/createCampaign.js";
+import { getPlayerCampaigns } from "../actions/game-actions/getPlayerCampains.js";
 
 const gameRouter = Router();
 

@@ -1,8 +1,7 @@
 import { randomUUID, createHash } from 'crypto';
-import { createCampaign, removeCampaignById } from '../../infrastructure/db/adapters/campaignRepoAdapter.js';
-import { createWorld } from '../../infrastructure/db/adapters/worldRepoAdapter.js';
-import { generateWorld } from '../../utils/generateWorld.js';
+import { createCampaign, removeCampaignById, createWorld } from '@dnd/redis-adapter';
 import { CreateCampaignInput } from '../../types/CreateCampaignTypes.js';
+import { generateWorld } from '../../utils/generateWorld.js';
 
 const size = 9;
 

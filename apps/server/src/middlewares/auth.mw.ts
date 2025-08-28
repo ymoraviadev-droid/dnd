@@ -2,7 +2,7 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "@dnd/env";
-import { rotateWithRefresh } from "../../auth/authAdapters.js"; // <-- your adapter
+import { rotateWithRefresh } from "@dnd/redis-adapter";
 
 const ACCESS_HEADER = "x-access-token";   // "Bearer <token>"
 const REFRESH_HEADER = "x-refresh-token"; // native clients only

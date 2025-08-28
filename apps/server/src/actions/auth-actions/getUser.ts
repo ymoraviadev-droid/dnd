@@ -1,4 +1,4 @@
-import { getUserById } from "../../infrastructure/db/adapters/authRepoAdapter.js";
+import { getUserById } from "@dnd/redis-adapter";
 
 export const getUser = async (id: number) => {
     const user = await getUserById(id);

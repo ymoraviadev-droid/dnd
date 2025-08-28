@@ -1,6 +1,6 @@
 // src/application/auth-actions/registerUser.ts
 import { RegisterBody } from "@dnd/zod-schemas";
-import { registerWithAuth } from "../../infrastructure/auth/authAdapters.js";
+import { registerWithAuth } from "@dnd/redis-adapter";
 
 export const registerUser = async (userData: RegisterBody) => {
     const result = await registerWithAuth(userData);

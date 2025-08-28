@@ -1,7 +1,6 @@
-import { CreateCampaignRow } from "../../../types/CreateCampaignTypes.js";
-import { db } from "../dbClient.js";
+import { db } from "./dbClient.js";
 
-export async function createCampaign(data: CreateCampaignRow) {
+export async function createCampaign(data: any) {
     return db.call<any>('db:req', {
         repo: 'campaign',
         action: 'create',

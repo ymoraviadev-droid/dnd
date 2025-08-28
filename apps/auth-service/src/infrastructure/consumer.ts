@@ -14,11 +14,10 @@ import {
     findRefreshTokenByHash,
     getUserById,
     revokeRefreshTokenByHash
-} from './dbAdapters.js';
+} from '@dnd/redis-adapter';
 
 const STREAM = 'auth:req';
 const GROUP = 'auth:service';
-const DLQ = 'auth:dlq';
 const CONSUMER = `worker-${process.pid}`;
 const log = createLogger({ service: 'auth-service' });
 

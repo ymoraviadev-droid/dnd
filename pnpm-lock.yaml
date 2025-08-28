@@ -30,9 +30,9 @@ importers:
       '@dnd/logger':
         specifier: workspace:*
         version: link:../../packages/logger
-      '@dnd/rpc-client':
+      '@dnd/redis-adapter':
         specifier: workspace:*
-        version: link:../../packages/rpc-client
+        version: link:../../packages/redis-adapter
       '@dnd/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -439,9 +439,9 @@ importers:
       '@dnd/logger':
         specifier: workspace:*
         version: link:../../packages/logger
-      '@dnd/rpc-client':
+      '@dnd/redis-adapter':
         specifier: workspace:*
-        version: link:../../packages/rpc-client
+        version: link:../../packages/redis-adapter
       '@dnd/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -526,6 +526,22 @@ importers:
         specifier: ^5.9.0
         version: 5.9.2
 
+  packages/redis-adapter:
+    dependencies:
+      redis:
+        specifier: ^4.6.14
+        version: 4.7.1
+    devDependencies:
+      '@types/node':
+        specifier: ^24.2.0
+        version: 24.3.0
+      tsup:
+        specifier: ^8.5.0
+        version: 8.5.0(postcss@8.4.49)(tsx@4.20.5)(typescript@5.9.2)
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.2
+
   packages/rn-pixel-ui:
     dependencies:
       react:
@@ -549,22 +565,6 @@ importers:
         version: 8.5.0(postcss@8.4.49)(tsx@4.20.5)(typescript@5.9.2)
       typescript:
         specifier: ^5.4.0
-        version: 5.9.2
-
-  packages/rpc-client:
-    dependencies:
-      redis:
-        specifier: ^4.6.14
-        version: 4.7.1
-    devDependencies:
-      '@types/node':
-        specifier: ^24.2.0
-        version: 24.3.0
-      tsup:
-        specifier: ^8.5.0
-        version: 8.5.0(postcss@8.4.49)(tsx@4.20.5)(typescript@5.9.2)
-      typescript:
-        specifier: ^5.9.0
         version: 5.9.2
 
   packages/types:

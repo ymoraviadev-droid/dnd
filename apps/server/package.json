@@ -21,7 +21,7 @@
     "devDependencies": {
         "@dnd/env": "workspace:*",
         "@dnd/logger": "workspace:*",
-        "@dnd/rpc-client": "workspace:*",
+        "@dnd/redis-adapter": "workspace:*",
         "@dnd/types": "workspace:*",
         "@dnd/typescript-config": "workspace:*",
         "@dnd/zod-schemas": "workspace:*",

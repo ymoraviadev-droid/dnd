@@ -1,5 +1,5 @@
 import { initialize } from "./infrastructure/consumer.js";
-import { dbReady } from "./infrastructure/dbClient.js";
+import { dbReady } from "@dnd/redis-adapter";
 import { createLogger } from "@dnd/logger";
 
 const log = createLogger({ service: "auth-service" });

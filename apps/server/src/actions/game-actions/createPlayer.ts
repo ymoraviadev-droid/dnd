@@ -1,5 +1,5 @@
+import { createPlayerRow } from '@dnd/redis-adapter';
 import { CreatePlayerBody } from '@dnd/zod-schemas';
-import { createPlayerRow } from '../../infrastructure/db/adapters/playerRepoAdapter.js';
 
 export const createPlayer = async (input: CreatePlayerBody, userId: number) => {
     const { name, race, class: cls, alignment, abilities } = input;

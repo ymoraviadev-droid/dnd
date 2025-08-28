@@ -1,5 +1,4 @@
-// userRepoAdapter.ts
-import { db } from '../dbClient.js';
+import { db } from "./dbClient.js";
 
 export async function getUserById(userId: number) {
     return db.call<any>('db:req', {
@@ -57,7 +56,15 @@ export async function findRefreshTokenByHash(tokenHash: string) {
         action: "findOne",
         where: { tokenHash }
     });
-}
+};
+
+export async function findRefreshTokenByUserId(userId: number) {
+    return db.call<any>('db:req', {
+        repo: 'refreshToken',
+        action: 'findOne',
+        where: { userId }
+    });
+};
 
 export async function revokeRefreshTokenByHash(tokenHash: string, replacedByToken: string | null) {
     return db.call<number>("db:req", {

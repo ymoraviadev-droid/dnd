@@ -1,4 +1,4 @@
-import { getRefreshTokenRow, getUserById, deleteRefreshTokenByUserId } from "../../infrastructure/db/adapters/authRepoAdapter.js";
+import { deleteRefreshTokenByUserId, getUserById, getRefreshTokenRow } from "@dnd/redis-adapter";
 
 export const logoutUser = async (id: number) => {
     const user = await getUserById(id);

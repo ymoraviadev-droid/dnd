@@ -2,11 +2,11 @@ import { Router } from "express";
 import { catchAsync } from "../middlewares/catchAsync.mw.js";
 import { validate } from "../middlewares/validation.mw.js";
 import { LoginByTokenSchema, LoginSchema, RegisterSchema } from "@dnd/zod-schemas";
-import { loginUser } from "../../../application/auth-actions/loginUser.js";
-import { registerUser } from "../../../application/auth-actions/registerUser.js";
+import { loginUser } from "../actions/auth-actions/loginUser.js";
+import { registerUser } from "../actions/auth-actions/registerUser.js";
 import { auth } from "../middlewares/auth.mw.js";
-import { logoutUser } from "../../../application/auth-actions/logoutUser.js";
-import { getUser } from "../../../application/auth-actions/getUser.js";
+import { logoutUser } from "../actions/auth-actions/logoutUser.js";
+import { getUser } from "../actions/auth-actions/getUser.js";
 
 const authRouter = Router();
 

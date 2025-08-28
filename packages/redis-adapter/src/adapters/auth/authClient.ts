@@ -1,4 +1,4 @@
-import { StreamRpcClient, toAnyRedis } from '@dnd/rpc-client';
+import { StreamRpcClient, toAnyRedis } from '../../rpcClient.js';
 import { createClient } from 'redis';
 
 const base = createClient({ url: process.env.REDIS_URL });

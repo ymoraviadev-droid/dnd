@@ -1,7 +1,6 @@
 // src/application/auth-actions/loginUser.ts
 import type { Request } from 'express';
-import { rotateWithRefresh, loginWithCredentials } from '../../infrastructure/auth/authAdapters.js';
-import { getPlayersByUserId } from '../../infrastructure/db/adapters/playerRepoAdapter.js';
+import { rotateWithRefresh, loginWithCredentials, getPlayersByUserId } from '@dnd/redis-adapter';
 
 export const loginUser = async (req: Request) => {
     const ua = (req.headers['user-agent'] as string) ?? null;

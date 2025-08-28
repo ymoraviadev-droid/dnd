@@ -2,7 +2,7 @@ import morgan, { TokenIndexer } from 'morgan';
 import { Request, Response } from 'express';
 import chalk from 'chalk';
 import { DateTime } from 'luxon';
-import { MorganConsoleLogFormat } from '../../../types/MorganConsoleLogFormat.js';
+import { MorganConsoleLogFormat } from '../types/MorganConsoleLogFormat.js';
 
 const consoleFormat = (tokens: TokenIndexer, req: Request, res: Response) => {
     const color = res.statusCode >= 400 ? chalk.red : chalk.green;

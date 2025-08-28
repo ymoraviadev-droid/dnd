@@ -1,6 +1,5 @@
-import { authReady } from "./infrastructure/auth/authClient.js";
-import { dbReady } from "./infrastructure/db/dbClient.js";
-import { startServer } from "./infrastructure/http/server.js";
+import { authReady, dbReady } from "@dnd/redis-adapter";
+import { startServer } from "./server.js";
 import { createLogger } from "@dnd/logger";
 
 const log = createLogger({ service: "server" });

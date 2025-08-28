@@ -1,8 +1,6 @@
-// userRepoAdapter.ts
-import { db } from '../dbClient.js';
-import { CreatePlayerBody } from '@dnd/zod-schemas';
+import { db } from "./dbClient.js";
 
-export async function createPlayerRow(data: CreatePlayerBody) {
+export async function createPlayerRow(data: any) {
     return db.call<any>('db:req', {
         repo: 'player',
         action: 'create',

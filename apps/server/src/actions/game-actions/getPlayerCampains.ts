@@ -1,4 +1,4 @@
-import { getAllPlayerCampaigns } from "../../infrastructure/db/adapters/campaignRepoAdapter.js";
+import { getAllPlayerCampaigns } from "@dnd/redis-adapter";
 
 export const getPlayerCampaigns = async (playerId: number) => {
     return getAllPlayerCampaigns(playerId);

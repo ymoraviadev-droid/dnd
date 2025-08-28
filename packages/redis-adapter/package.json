@@ -1,7 +1,6 @@
 {
-  "name": "@dnd/rpc-client",
+  "name": "@dnd/redis-adapter",
   "version": "0.1.0",
-  "description": "Generic Stream RPC client over Redis Streams",
   "type": "module",
   "private": true,
   "main": "dist/index.js",
