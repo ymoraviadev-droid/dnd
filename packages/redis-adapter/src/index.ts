@@ -1,10 +1,13 @@
-export * from './rpcClient.js';
+// clients
+export * from './clients/rpcClient.js';
+export * from './clients/authClient.js';
+export * from './clients/dbClient.js';
 
-export * from './adapters/auth/authClient.js';
+// auth adapters
 export * from './adapters/auth/authAdapters.js';
 
-export * from './adapters/db/dbClient.js';
-export * from './adapters/db/authRepoAdapter.js';
-export * from './adapters/db/playerRepoAdapter.js';
-export * from './adapters/db/campaignRepoAdapter.js';
-export * from './adapters/db/worldRepoAdapter.js';
+// db adapters
+export * from './adapters/db/authDbAdapter.js';
+export * from './adapters/db/playerDbAdapter.js';
+export * from './adapters/db/campaignDbAdapter.js';
+export * from './adapters/db/worldDbAdapter.js';

@@ -1,4 +1,4 @@
-import { db } from "./dbClient.js";
+import { db } from "../../clients/dbClient.js";
 
 export async function createWorld(row: any) {
     return db.call<any>('db:req', {

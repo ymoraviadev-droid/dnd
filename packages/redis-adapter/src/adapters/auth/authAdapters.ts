@@ -1,4 +1,4 @@
-import { authClient } from "./authClient.js";
+import { authClient } from "../../clients/authClient.js";
 
 export async function rotateWithRefresh(refresh: string, ua: string | null, ip: string | null) {
     return authClient.call<{ accessToken: string; refreshToken: string; user?: any }>('auth:req', {

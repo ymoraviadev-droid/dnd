@@ -1,4 +1,4 @@
-import { db } from "./dbClient.js";
+import { db } from "../../clients/dbClient.js";
 
 export async function getUserById(userId: number) {
     return db.call<any>('db:req', {
